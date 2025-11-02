@@ -19,14 +19,14 @@ const RootLayout = () => {
   const options: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: 'numeric' };
   const formattedDate = today.toLocaleDateString('en-US', options);
   const currentTime = today.toLocaleTimeString('en-US', {
-      hour: '2-digit', 
-      minute: '2-digit', 
-      hour12: false 
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
   })
-    
+
   return (
   <div className="flex flex-col h-screen">
-    <div className="hidden md:flex flex place-content-between p-5 mt-5 bg-white/75">
+    <div className="hidden md:flex place-content-between p-5 mt-5 bg-white/75">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>

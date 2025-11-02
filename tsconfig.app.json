@@ -23,6 +23,7 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "forceConsistentCasingInFileNames": true,
 
     // Shadcdn path resolutution
     "baseUrl": ".",
@@ -30,7 +31,7 @@
       "@/*": [
         "./src/*"
       ]
-    }, 
+    },
   },
   "include": ["src"]
 }
