@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Button } from '@/components/ui/button'
 import DaysDialog from '@/components/days-dialog';
 
 export const Route = createFileRoute('/')({
@@ -13,7 +12,7 @@ function Index() {
       <h3>300</h3>
       <h3>Days Left</h3>
       <div>
-        <DaysDialog />        
+        <DaysDialog />
       </div>
       </div>
     </div>
