@@ -8,7 +8,7 @@ import './index.css'
 import { routeTree } from './routeTree.gen'
 
 // Create a new router instance
-const router = createRouter({ routeTree })
+export const router = createRouter({ routeTree })
 
 
 // Register the router instance for type safety
@@ -28,7 +28,7 @@ axios.interceptors.response.use(
   error => {
     if (error.response && error.response.status === 401) {
       console.log('Unauthorized! Redirecting to login...');
-      window.location.href = '/login';
+      router.navigate({ to: '/login' });
     }
     return Promise.reject(error);
   }
