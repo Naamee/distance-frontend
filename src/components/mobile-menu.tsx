@@ -4,16 +4,23 @@ import {
   DialogDescription,
   DialogTrigger,
 } from '@/components/ui/menu-dialog';
-import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
 import * as React from 'react';
-import { Link, useLocation } from '@tanstack/react-router';
+import { Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { DialogTitle } from '@radix-ui/react-dialog';
+import { Link, useLocation } from '@tanstack/react-router';
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = React.useState(false);
   const location = useLocation();
   const pathName = location.pathname
+
+  const navItems = [
+    { name: "Home", path: "/" },
+    { name: "Fridge", path: "/fridge" },
+    { name: "Movies", path: "/movies" },
+    { name: "Events", path: "/events" },
+  ];
 
   return (
     <>
@@ -42,34 +49,18 @@ export default function MobileMenu() {
           <DialogDescription className="hidden">Mobile Menu</DialogDescription>
           <DialogTitle className="hidden">Menu</DialogTitle>
           <div className="flex flex-col gap-5 w-full">
-            <Link
-              to="/"
-              onClick={() => setIsOpen(false)}
-              className={`w-full text-2xl text-start active:text-amber-700 font-bold ${pathName === '/' ? 'text-amber-500' : 'text-gray-500'} inline-flex items-center justify-center px-4 py-2 hover:bg-gray-100 rounded`}
-            >
-              Home
-            </Link>
-            <Link
-              to="/fridge"
-              onClick={() => setIsOpen(false)}
-              className={`w-full text-2xl text-start active:text-amber-700 font-bold ${pathName === '/fridge' ? 'text-amber-500' : 'text-gray-500'} inline-flex items-center justify-center px-4 py-2 hover:bg-gray-100 rounded`}
-            >
-              Fridge
-            </Link>
-            <Link
-              to="/movies"
-              onClick={() => setIsOpen(false)}
-              className={`w-full text-2xl text-start active:text-amber-700 font-bold ${pathName === '/movies' ? 'text-amber-500' : 'text-gray-500'} inline-flex items-center justify-center px-4 py-2 hover:bg-gray-100 rounded`}
-            >
-              Movies
-            </Link>
-            <Link
-              to="/events"
-              onClick={() => setIsOpen(false)}
-              className={`w-full text-2xl text-start active:text-amber-700 font-bold ${pathName === '/events' ? 'text-amber-500' : 'text-gray-500'} inline-flex items-center justify-center px-4 py-2 hover:bg-gray-100 rounded`}
-            >
-              Events
-            </Link>
+            {
+              navItems.map(item => (
+                <Link
+                  to={item.path}
+                  key={item.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`w-full text-2xl text-start active:text-amber-700 font-bold ${pathName === item.path ? 'text-amber-500' : 'text-gray-500'} inline-flex items-center justify-center px-4 py-2 hover:bg-gray-100 rounded`}
+                >
+                  {item.name}
+                </Link>
+              ))
+            }
           </div>
         </DialogContent>
       </Dialog>

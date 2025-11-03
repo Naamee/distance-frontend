@@ -6,22 +6,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import * as React from 'react';
-import axios from 'axios';
 import { ChevronDownIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 export default function DaysDialog() {
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState<Date | undefined>(undefined);
-
-  const test = () => {
-    axios.get('/meet').then(response => {
-      console.log(response.data);
-    })
-  }
 
   return (
     <>
@@ -57,7 +50,7 @@ export default function DaysDialog() {
               />
             </PopoverContent>
           </Popover>
-          <Button onClick={test} className="mt-4 md:mt-0 font-bold bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 active:from-amber-400 active:to-amber-500 active:mt-1">Submit</Button>
+          <Button className="mt-4 md:mt-0 font-bold bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 active:from-amber-400 active:to-amber-500 active:mt-1">Submit</Button>
         </DialogContent>
       </Dialog>
     </>
