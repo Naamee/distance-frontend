@@ -74,7 +74,7 @@ Key libraries used:
 - **React** – UI library
 - **Zustand** – State management
 - **TailwindCSS** – Utility-first CSS framework
-- **Radix UI** – Accessible UI components
+- **Shadcn UI** – Accessible UI components
 - **TanStack Router** – Routing solution
 - **Axios** – HTTP client
 - **Lucide React** – Icons
