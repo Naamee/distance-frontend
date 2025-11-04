@@ -5,7 +5,6 @@ import {
   useLocation,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -26,7 +25,7 @@ const RootLayout = () => {
     { name: "Events", path: "/events" },
   ];
 
-  return ['/login', '/register'].includes(pathName) ? (
+  return ["/login", "/register"].includes(pathName) ? (
     <Outlet />
   ) : (
     <div className="flex flex-col h-screen">
@@ -34,23 +33,21 @@ const RootLayout = () => {
       <div className="hidden md:flex place-content-between p-5 mt-5 bg-white/75">
         <NavigationMenu>
           <NavigationMenuList>
-              {
-                navItems.map(item => (
-                  <NavigationMenuItem key={item.path}>
-                  <NavigationMenuLink
-                    asChild
-                    className={`hover:bg-transparent focus:bg-transparent text-2xl ${pathName === item.path ? "pointer-events-none" : ""}`}
+            {navItems.map((item) => (
+              <NavigationMenuItem key={item.path}>
+                <NavigationMenuLink
+                  asChild
+                  className={`hover:bg-transparent focus:bg-transparent text-2xl ${pathName === item.path ? "pointer-events-none" : ""}`}
+                >
+                  <Link
+                    to={item.path}
+                    className="[&.active]:text-amber-500 font-bold text-gray-500 hover:text-amber-600 active:pt-1 active:text-amber-700"
                   >
-                    <Link
-                      to={item.path}
-                      className="[&.active]:text-amber-500 font-bold text-gray-500 hover:text-amber-600 active:pt-1 active:text-amber-700"
-                    >
-                      {item.name}
-                    </Link>
-                  </NavigationMenuLink>
-                  </NavigationMenuItem>
-                ))
-              }
+                    {item.name}
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            ))}
           </NavigationMenuList>
         </NavigationMenu>
         <AlertDialog />
