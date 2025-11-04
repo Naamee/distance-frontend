@@ -1,22 +1,22 @@
 import { type FormEvent, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { router } from "@/main";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircleIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useRequestStore } from "@/stores/requests";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useUserStore } from "@/stores/userStore";
 
 export const Route = createFileRoute("/login")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { userLogin, error, loading } = useRequestStore();
+  const { userLogin, error, loading } = useUserStore();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -27,10 +27,10 @@ function RouteComponent() {
   const submit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const success = await userLogin(formData)
+    const success = await userLogin(formData);
 
     if (success) {
-      router.navigate({to: '/'});
+      router.navigate({ to: "/" });
     }
   };
 
@@ -68,9 +68,15 @@ function RouteComponent() {
                   }
                 />
               </div>
-                <div className="grid gap-2">
+              <div className="grid gap-2">
                 <div className="flex items-center gap-4">
-                  <Checkbox id="terms" checked={formData.remember} onCheckedChange={(checked: boolean) => setFormData({ ...formData, remember: checked })}/>
+                  <Checkbox
+                    id="terms"
+                    checked={formData.remember}
+                    onCheckedChange={(checked: boolean) =>
+                      setFormData({ ...formData, remember: checked })
+                    }
+                  />
                   <Label htmlFor="password">Remember Me</Label>
                 </div>
               </div>
@@ -83,19 +89,19 @@ function RouteComponent() {
               disabled={loading}
               className="w-full font-bold bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 active:from-amber-400 active:to-amber-500 active:mt-1"
             >
-                {loading ? <Spinner /> : null}
+              {loading ? <Spinner /> : null}
               Login
             </Button>
 
             {/* error alert */}
             {error && (
-            <Alert variant="destructive">
-              <AlertCircleIcon />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>
-                <p>{error}</p>
-              </AlertDescription>
-            </Alert>
+              <Alert variant="destructive">
+                <AlertCircleIcon />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                  <p>{error}</p>
+                </AlertDescription>
+              </Alert>
             )}
 
             {/* divider */}

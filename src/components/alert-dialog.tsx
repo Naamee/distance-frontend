@@ -28,7 +28,9 @@ export default function AlertDialog({
   });
 
   return (
-    <div className={`flex items-center mr-4 gap-4 text-gray-500 font-bold ${isMobile ? "" : "text-2xl"}`}>
+    <div
+      className={`flex items-center mr-4 gap-4 text-gray-500 font-bold ${isMobile ? "" : "text-2xl"}`}
+    >
       <Dialog>
         <DialogTrigger asChild>
           <Button

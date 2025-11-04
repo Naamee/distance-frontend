@@ -1,20 +1,20 @@
 import { type FormEvent, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircleIcon, CircleCheck } from "lucide-react";
+import { useUserStore } from "@/stores/userStore";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircleIcon, Circle, CircleCheck } from "lucide-react";
-import { useRequestStore } from "@/stores/requests";
 
 export const Route = createFileRoute("/register")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { userRegister, error, loading } = useRequestStore();
+  const { userRegister, error, loading } = useUserStore();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -31,7 +31,6 @@ function RouteComponent() {
     if (success) {
       setSuccess(true);
     }
-
   };
 
   return (

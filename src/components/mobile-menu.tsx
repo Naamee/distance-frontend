@@ -3,17 +3,17 @@ import {
   DialogContent,
   DialogDescription,
   DialogTrigger,
-} from '@/components/ui/menu-dialog';
-import * as React from 'react';
-import { Menu, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { DialogTitle } from '@radix-ui/react-dialog';
-import { Link, useLocation } from '@tanstack/react-router';
+} from "@/components/ui/menu-dialog";
+import * as React from "react";
+import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { Link, useLocation } from "@tanstack/react-router";
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = React.useState(false);
   const location = useLocation();
-  const pathName = location.pathname
+  const pathName = location.pathname;
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -36,7 +36,7 @@ export default function MobileMenu() {
         </DialogTrigger>
         <DialogContent
           showCloseButton={false}
-          aria-description='mobile-menu'
+          aria-description="mobile-menu"
           className="
           fixed bottom-10 w-full h-full mt-24
           bg-white/75
@@ -49,18 +49,16 @@ export default function MobileMenu() {
           <DialogDescription className="hidden">Mobile Menu</DialogDescription>
           <DialogTitle className="hidden">Menu</DialogTitle>
           <div className="flex flex-col gap-5 w-full">
-            {
-              navItems.map(item => (
-                <Link
-                  to={item.path}
-                  key={item.path}
-                  onClick={() => setIsOpen(false)}
-                  className={`w-full text-2xl text-start active:text-amber-700 font-bold ${pathName === item.path ? 'text-amber-500' : 'text-gray-500'} inline-flex items-center justify-center px-4 py-2 hover:bg-gray-100 rounded`}
-                >
-                  {item.name}
-                </Link>
-              ))
-            }
+            {navItems.map((item) => (
+              <Link
+                to={item.path}
+                key={item.path}
+                onClick={() => setIsOpen(false)}
+                className={`w-full text-2xl text-start active:text-amber-700 font-bold ${pathName === item.path ? "text-amber-500" : "text-gray-500"} inline-flex items-center justify-center px-4 py-2 hover:bg-gray-100 rounded`}
+              >
+                {item.name}
+              </Link>
+            ))}
           </div>
         </DialogContent>
       </Dialog>
