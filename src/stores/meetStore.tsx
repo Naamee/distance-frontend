@@ -1,4 +1,5 @@
 import axios from "axios";
+import { da } from "date-fns/locale";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
@@ -15,6 +16,7 @@ export const useMeetStore = create(
       error: null as string | null,
     },
     (set) => ({
+      resetError: () => set({ error: null }),
       fetchMeet: async () => {
         try {
           const response = await axios.get("/meet");
@@ -26,6 +28,13 @@ export const useMeetStore = create(
       },
       updateMeet: async (date: string) => {
         set({ error: null, loading: true });
+
+        const currentDate = new Date()
+        if (new Date(date) < currentDate) {
+          set({ error: "Meet date cannot be in the past." , loading: false});
+          return false;
+        }
+
         try {
           await axios.put("/meet", { date });
           return true;
