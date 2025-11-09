@@ -1,11 +1,7 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
 import { useMediaQuery } from "react-responsive";
-import {
-  Field,
-  FieldGroup,
-  FieldSet,
-} from "@/components/ui/field";
+import { createFileRoute } from "@tanstack/react-router";
+import { Field, FieldGroup, FieldSet } from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -21,10 +17,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
+import { AlertCircleIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Separator } from "@/components/ui/separator";
 import SearchFilters from "@/components/search-filters";
+import { useItemStore } from "@/stores/itemStore";
 
 export const Route = createFileRoute("/fridge")({
   component: Fridge,
@@ -33,10 +33,36 @@ export const Route = createFileRoute("/fridge")({
 function Fridge() {
   const [currentView, setView] = useState("all");
   const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isSmallMobile = useMediaQuery({ maxWidth: 345 });
+  const { postItem, error, loading } = useItemStore();
 
   const menuButtons: Record<string, string> = {
     new: "Add New",
     all: "All Items",
+  };
+  const categories: Record<string, string> = {
+    food: "Food",
+    cleaning: "Cleaning Supplies",
+    cosmetics: "Cosmetics",
+    medicine: "Medicine",
+    kitchen: "Kitchen / Cooking Essentials",
+    hardware: "Hardware Tools",
+  };
+
+  const [newItem, setNewItem] = useState({
+    name: "",
+    category: "",
+    quantity: 0,
+  });
+
+  const submitItem = async () => {
+    // handle submission logic here
+    const success = await postItem(newItem);
+    if (success) {
+      // reset form
+      setNewItem({ name: "", category: "", quantity: 0 });
+      setView("all");
+    }
   };
 
   return (
@@ -66,30 +92,43 @@ function Fridge() {
         {currentView === "new" && (
           <div className="flex flex-col justify-end">
             <FieldSet className="my-4">
-              <FieldGroup className="gap-4">
+              <FieldGroup className="gap-3">
                 <Field>
                   <Input
                     id="name"
                     autoComplete="off"
                     placeholder="Item Name"
                     className="h-10 text-sm md:text-base px-4"
+                    onChange={(name) =>
+                      setNewItem({ ...newItem, name: name.target.value })
+                    }
                   />
                 </Field>
 
                 <Field>
-                  <Select>
-                    <SelectTrigger className="!h-10 md:text-base px-4 flex items-center">
-                      <SelectValue placeholder="Category" />
+                  <Select
+                    value={newItem.category}
+                    onValueChange={(category) =>
+                      setNewItem({ ...newItem, category })
+                    }
+                  >
+                    <SelectTrigger className="!h-10 md:text-base">
+                      <span
+                        className={`${isSmallMobile ? "block" : "flex"} truncate overflow-hidden text-ellipsis whitespace-nowrap w-full min-w-0`}
+                      >
+                        <SelectValue placeholder="Category" />
+                      </span>
                     </SelectTrigger>
                     <SelectContent className="md:text-base">
-                      <SelectItem className="md:text-base" value="engineering">Food</SelectItem>
-                      <SelectItem className="md:text-base" value="design">Cleaning Supplies</SelectItem>
-                      <SelectItem className="md:text-base" value="marketing">Cosmetics</SelectItem>
-                      <SelectItem className="md:text-base" value="marketing">Medicine</SelectItem>
-                      <SelectItem className="md:text-base" value="marketing">
-                        Kitchen / Cooking Essentials
-                      </SelectItem>
-                      <SelectItem className="md:text-base" value="marketing">Hardware Tools</SelectItem>
+                      {Object.entries(categories).map(([key, label]) => (
+                        <SelectItem
+                          key={key}
+                          className="md:text-base"
+                          value={key}
+                        >
+                          {label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </Field>
@@ -101,12 +140,33 @@ function Fridge() {
                     autoComplete="off"
                     placeholder="Quantity"
                     className="h-10 text-sm md:text-base px-4"
+                    onChange={(quantity) =>
+                      setNewItem({
+                        ...newItem,
+                        quantity: parseInt(quantity.target.value),
+                      })
+                    }
                   />
                 </Field>
               </FieldGroup>
             </FieldSet>
 
-            <Button className="md:h-10 mt-2 md:text-base bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 active:from-amber-400 active:to-amber-500 active:mt-3">
+            {/* error alert */}
+            {error && (
+              <Alert variant="destructive">
+                <AlertCircleIcon />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                  <p>{error}</p>
+                </AlertDescription>
+              </Alert>
+            )}
+
+            <Button
+              onClick={submitItem}
+              className="md:h-10 mt-2 md:text-base bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 active:from-amber-400 active:to-amber-500 active:mt-3"
+            >
+              {loading ? <Spinner /> : null}
               Submit
             </Button>
           </div>
