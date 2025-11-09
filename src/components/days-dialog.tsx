@@ -71,10 +71,10 @@ export default function DaysDialog() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="w-80">
+      <DialogContent className="w-100" showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle>Meeting Date</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-xl">Meeting Date</DialogTitle>
+          <DialogDescription className="text-base">
             Select the date when we will be meeting next.
           </DialogDescription>
         </DialogHeader>
@@ -84,7 +84,7 @@ export default function DaysDialog() {
             <Button
               variant="outline"
               id="date"
-              className="w-full justify-between font-normal"
+              className="w-full justify-between font-normal md:text-base"
             >
               {date ? date.toLocaleDateString() : "Select date"}
               <ChevronDownIcon />
@@ -118,7 +118,7 @@ export default function DaysDialog() {
           <Button
             onClick={handleDelete}
             disabled={loading}
-            className="flex-1 font-bold bg-gradient-to-b from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 active:from-rose-400 active:to-rose-500"
+            className="flex-1 md:text-base  font-bold bg-gradient-to-b from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 active:from-rose-400 active:to-rose-500"
           >
             {loading ? <Spinner /> : null}
             Delete
@@ -127,7 +127,7 @@ export default function DaysDialog() {
           <Button
             onClick={submit}
             disabled={loading}
-            className="flex-1 font-bold bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 active:from-amber-400 active:to-amber-500"
+            className="flex-1 md:text-base font-bold bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 active:from-amber-400 active:to-amber-500"
           >
             {loading ? <Spinner /> : null}
             Submit
