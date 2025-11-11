@@ -4,6 +4,7 @@ import {
   Outlet,
   useLocation,
 } from "@tanstack/react-router";
+import { useMediaQuery } from "react-responsive";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import {
   NavigationMenu,
@@ -11,12 +12,14 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import { Toaster } from "@/components/ui/sonner";
 import AlertDialog from "@/components/alert-dialog";
 import MobileMenu from "@/components/mobile-menu";
 
 const RootLayout = () => {
   const location = useLocation();
   const pathName = location.pathname;
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -29,6 +32,17 @@ const RootLayout = () => {
     <Outlet />
   ) : (
     <div className="flex flex-col h-screen">
+      <Toaster
+        position={isMobile ? "top-center" : "top-right"}
+        toastOptions={{
+          unstyled: true,
+          duration: 40000,
+          classNames: {
+            success:
+              "text-green-700 flex px-3 py-2 items-center gap-3 bg-white border border-green-700 shadow-md text-sm rounded-sm",
+          },
+        }}
+      />
       {/* Nav Menu */}
       <div className="hidden md:flex place-content-between p-5 mt-5 bg-white/75">
         <NavigationMenu>
