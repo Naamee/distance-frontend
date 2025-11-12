@@ -15,11 +15,29 @@ interface fetchCombinedData {
   quantity: number;
 }
 
+interface FridgeData {
+  data: fetchCombinedData[];
+  pagination: {
+    page: number;
+    per_page: number;
+    total_items: number;
+    total_pages: number;
+  }
+}
+
 
 export const useItemStore = create(
   combine(
     {
-      combinedItems: [] as fetchCombinedData[],
+      combinedItems: {
+        data: [],
+        pagination: {
+          page: 1,
+          per_page: 10,
+          total_items: 0,
+          total_pages: 0,
+        },
+      } as FridgeData,
       loading: false,
       error: null as string | null,
     },
@@ -40,10 +58,10 @@ export const useItemStore = create(
           set({ loading: false });
         }
         },
-      fetchCombinedItems: async () => {
+      fetchCombinedItems: async (page: number) => {
         set({ error: null, loading: true });
         try {
-          const response = await axios.get("/fridge");
+          const response = await axios.get("/fridge", { params: { page } });
           set({ combinedItems: response.data });
         } catch (error: any) {
           const message = axios.isAxiosError(error)

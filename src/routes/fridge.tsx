@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import { createFileRoute } from "@tanstack/react-router";
 import { Field, FieldGroup, FieldSet } from "@/components/ui/field";
@@ -9,15 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { type ColumnDef } from "@tanstack/react-table";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { AlertCircleIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,6 +19,14 @@ import { Spinner } from "@/components/ui/spinner";
 import { Separator } from "@/components/ui/separator";
 import SearchFilters from "@/components/search-filters";
 import { useItemStore } from "@/stores/itemStore";
+import { DataTable } from "@/components/data-table";
+
+interface CombinedItemData {
+  name: string;
+  type: string;
+  category: string;
+  quantity: number;
+}
 
 export const Route = createFileRoute("/fridge")({
   component: Fridge,
@@ -34,7 +36,8 @@ function Fridge() {
   const [currentView, setView] = useState("all");
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const isSmallMobile = useMediaQuery({ maxWidth: 345 });
-  const { postItem, error, loading } = useItemStore();
+  const { postItem, fetchCombinedItems, combinedItems, error, loading } =
+    useItemStore();
 
   const menuButtons: Record<string, string> = {
     new: "Add New",
@@ -54,6 +57,50 @@ function Fridge() {
     category: "",
     quantity: 0,
   });
+  const [page, setPage] = useState(1);
+
+  const columns: ColumnDef<CombinedItemData>[] = [
+    {
+      accessorKey: "name",
+      header: "Name",
+      cell: info => (
+        <div className="w-50 truncate" title={info.getValue() as string}>
+          {info.getValue() as string}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "category",
+      header: "Category",
+      cell: info => (
+        <div className="w-50 truncate" title={info.getValue() as string}>
+          {info.getValue() as string}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "quantity",
+      header: "Quantity",
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        // derive status from quantity
+        const quantity = row.getValue("quantity") as number;
+        const status = quantity > 0 ? "Available" : "Unavailable";
+        return (
+          <Button
+            variant="outline"
+            size="sm"
+            className={`border p-2 ${quantity > 0 ? "border-green-600 text-green-600 hover:text-green-600" : "border-red-600 text-red-600 hover:text-red-600"}`}
+          >
+            {status}
+          </Button>
+        );
+      },
+    },
+  ];
 
   const submitItem = async () => {
     // handle submission logic here
@@ -62,11 +109,18 @@ function Fridge() {
       // reset form
       setNewItem({ name: "", category: "", quantity: 0 });
       setView("all");
+      toast.success("Item added!");
     }
   };
 
+  useEffect(() => {
+    (async () => {
+      await fetchCombinedItems(page);
+    })();
+  }, [page]);
+
   return (
-    <div className="flex gap-10 justify-center mt-10 mx-4">
+    <div className="flex gap-10 justify-center mt-10 mx-10">
       <div
         className={`bg-white border border-amber-500 p-10 transition-all duration-300 rounded-sm w-full ${currentView === "all" ? "h-full md:max-w-6xl" : "md:max-w-md"} `}
       >
@@ -114,7 +168,7 @@ function Fridge() {
                   >
                     <SelectTrigger className="!h-10 md:text-base">
                       <span
-                        className={`${isSmallMobile ? "block" : "flex"} truncate overflow-hidden text-ellipsis whitespace-nowrap w-full min-w-0`}
+                        className={`${isSmallMobile && newItem.category === "Kitchen / Cooking Essentials" ? "block" : "flex"} truncate overflow-hidden text-ellipsis whitespace-nowrap w-full min-w-0`}
                       >
                         <SelectValue placeholder="Category" />
                       </span>
@@ -124,7 +178,7 @@ function Fridge() {
                         <SelectItem
                           key={key}
                           className="md:text-base"
-                          value={key}
+                          value={label}
                         >
                           {label}
                         </SelectItem>
@@ -175,28 +229,18 @@ function Fridge() {
         {currentView === "all" && (
           <div>
             {<SearchFilters isMobile={isMobile} />}
-
             {!isMobile && (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    {["Name", "Category", "Quantity", "Status", ""].map(
-                      (status, index) => (
-                        <TableHead key={index}>{status}</TableHead>
-                      )
-                    )}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow>
-                    <TableCell className="font-medium">INV001</TableCell>
-                    <TableCell>Paid</TableCell>
-                    <TableCell>Credit Card</TableCell>
-                    <TableCell>$250.00</TableCell>
-                    <TableCell>$250.00</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+              <DataTable
+                columns={columns}
+                data={combinedItems.data}
+                pageIndex={combinedItems.pagination.page}
+                pageSize={combinedItems.pagination.total_pages}
+                onPageChange={(newPage: number) => setPage(newPage)}
+              />
+            )}
+
+            {isMobile && (
+
             )}
           </div>
         )}
