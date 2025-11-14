@@ -9,6 +9,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemFooter,
+  ItemTitle,
+} from "@/components/ui/item";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { type ColumnDef } from "@tanstack/react-table";
 import { toast } from "sonner";
@@ -52,18 +60,23 @@ function Fridge() {
     hardware: "Hardware Tools",
   };
 
+  const [page, setPage] = useState(1);
   const [newItem, setNewItem] = useState({
     name: "",
     category: "",
     quantity: 0,
   });
-  const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState({
+    item: "",
+    category: "",
+    status: "",
+  });
 
   const columns: ColumnDef<CombinedItemData>[] = [
     {
       accessorKey: "name",
       header: "Name",
-      cell: info => (
+      cell: (info) => (
         <div className="w-50 truncate" title={info.getValue() as string}>
           {info.getValue() as string}
         </div>
@@ -72,7 +85,7 @@ function Fridge() {
     {
       accessorKey: "category",
       header: "Category",
-      cell: info => (
+      cell: (info) => (
         <div className="w-50 truncate" title={info.getValue() as string}>
           {info.getValue() as string}
         </div>
@@ -115,12 +128,14 @@ function Fridge() {
 
   useEffect(() => {
     (async () => {
-      await fetchCombinedItems(page);
+      await fetchCombinedItems(page, filters);
     })();
-  }, [page]);
+  }, [page, filters]);
 
   return (
-    <div className="flex gap-10 justify-center mt-10 mx-10">
+    <div
+      className={`flex gap-10 justify-center mt-10 ${isMobile ? "mx-3 mb-6" : "mx-10"}`}
+    >
       <div
         className={`bg-white border border-amber-500 p-10 transition-all duration-300 rounded-sm w-full ${currentView === "all" ? "h-full md:max-w-6xl" : "md:max-w-md"} `}
       >
@@ -218,7 +233,7 @@ function Fridge() {
 
             <Button
               onClick={submitItem}
-              className="md:h-10 mt-2 md:text-base bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 active:from-amber-400 active:to-amber-500 active:mt-3"
+              className="md:h-10 mt-2 md:text-base bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500 active:mt-3"
             >
               {loading ? <Spinner /> : null}
               Submit
@@ -228,7 +243,7 @@ function Fridge() {
 
         {currentView === "all" && (
           <div>
-            {<SearchFilters isMobile={isMobile} />}
+            {<SearchFilters isMobile={isMobile} filters={filters} setFilters={setFilters}/>}
             {!isMobile && (
               <DataTable
                 columns={columns}
@@ -240,7 +255,29 @@ function Fridge() {
             )}
 
             {isMobile && (
-
+              <div className="flex flex-col max-h-[calc(100vh-22rem)] overflow-auto border border-amber-600/40 bg-amber-600/5 rounded-sm">
+                {combinedItems.data.map((item, index) => (
+                  <Item
+                    key={index}
+                    className={`relative bg-white hover:bg-white/30 active:bg-white/40 rounded-none
+                    ${index !== combinedItems.data.length -1 ? "border-amber-600/10" : ""} `}
+                  >
+                    <ItemContent>
+                      <ItemTitle>{item.name}</ItemTitle>
+                      <ItemDescription>{item.category}</ItemDescription>
+                    </ItemContent>
+                    <ItemActions />
+                    <ItemFooter>
+                      <span>Qty: {item.quantity}</span>
+                      <span
+                        className={`${item.quantity > 0 ? "text-green-600" : "text-red-600"}`}
+                      >
+                        {item.quantity > 0 ? "Available" : "Unavailable"}
+                      </span>
+                    </ItemFooter>
+                  </Item>
+                ))}
+              </div>
             )}
           </div>
         )}
