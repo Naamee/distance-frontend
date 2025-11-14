@@ -124,24 +124,28 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center justify-center space-x-2 py-4 gap-3">
         <Button
           variant="outline"
-          className="text-amber-500 hover:text-white disabled:text-gray-400 hover:bg-amber-400 border border-amber-600 disabled:border-gray-300"
+          className="text-white hover:text-white bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500 disabled:from-gray-300 disabled:to-gray-400   disabled:border-gray-300"
           size="sm"
+          title="Previous page"
           onClick={() => onPageChange(pageIndex - 1)}
           disabled={pageIndex === 1}
         >
           <ArrowLeft />
+          <span className="sr-only">Previous Page</span>
         </Button>
         <p>
           {pageIndex} of {pageSize}
         </p>
         <Button
           variant="outline"
-          className="text-amber-500 hover:text-white disabled:text-gray-400 hover:bg-amber-400 border border-amber-600 disabled:border-gray-300"
+          className="text-white hover:text-white bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500 disabled:from-gray-300 disabled:to-gray-400  disabled:border-gray-300"
           size="sm"
+          title="Next page"
           onClick={() => onPageChange(pageIndex + 1)}
           disabled={pageIndex == pageSize}
         >
           <ArrowRight />
+          <span className="sr-only">Next Page</span>
         </Button>
       </div>
     </div>
