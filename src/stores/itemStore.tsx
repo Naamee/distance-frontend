@@ -25,6 +25,12 @@ interface FridgeData {
   }
 }
 
+interface Filters {
+  item: string;
+  category: string;
+  status: string;
+}
+
 
 export const useItemStore = create(
   combine(
@@ -45,6 +51,13 @@ export const useItemStore = create(
       resetError: () => set({ error: null }),
       postItem: async (item: ItemData) => {
         set({ error: null, loading: true });
+
+        if(item.name === '' || item.category === '' || item.quantity === 0) {
+          return set({error: 'Ensure all fields are complete', loading: false})
+        }
+
+
+
         try {
             await axios.post("/fridge", item);
             return true;
@@ -58,10 +71,10 @@ export const useItemStore = create(
           set({ loading: false });
         }
         },
-      fetchCombinedItems: async (page: number) => {
+      fetchCombinedItems: async (page: number, filters: Filters) => {
         set({ error: null, loading: true });
         try {
-          const response = await axios.get("/fridge", { params: { page } });
+          const response = await axios.get("/fridge", { params: { page, item: filters.item, category: filters.category, status: filters.status  } });
           set({ combinedItems: response.data });
         } catch (error: any) {
           const message = axios.isAxiosError(error)

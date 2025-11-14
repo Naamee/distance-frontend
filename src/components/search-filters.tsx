@@ -14,15 +14,24 @@ import {
 } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ListFilterPlus } from "lucide-react";
+import { ListFilterPlus, FunnelX } from "lucide-react";
 
-export default function SearchFilters({ isMobile }: { isMobile: boolean }) {
+interface Filters {
+  item: string;
+  category: string;
+  status: string;
+}
+
+export default function SearchFilters({
+  isMobile,
+  filters,
+  setFilters,
+}: {
+  isMobile: boolean;
+  filters: Filters;
+  setFilters: (filters: Filters) => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    name: "",
-    category: "",
-    status: "",
-  });
 
   const categories: Record<string, string> = {
     food: "Food",
@@ -42,56 +51,78 @@ export default function SearchFilters({ isMobile }: { isMobile: boolean }) {
       {!isMobile && (
         <FieldSet className="my-4">
           <FieldGroup>
-            <div className="md:grid md:grid-cols-3 md:gap-4 space-y-4">
-              <Field>
+            <div className="md:grid md:grid-cols-12 md:gap-4 space-y-4 md:space-y-0">
+              <Field className="md:col-span-4">
                 <Input
-                  id="name"
+                  id="item"
+                  value={filters.item}
                   autoComplete="off"
                   placeholder="Item Name"
                   className="h-10 text-sm md:text-base px-4"
-                  onChange={name => setFilters({...filters, name: name.target.value})}
+                  onChange={(item) =>
+                    setFilters({ ...filters, item: item.target.value })
+                  }
                 />
               </Field>
 
-              <Field>
-                <Select value={filters.category} onValueChange={category => setFilters({...filters, category})}>
+              <Field className="md:col-span-4">
+                <Select
+                  value={filters.category}
+                  onValueChange={(category) =>
+                    setFilters({ ...filters, category })
+                  }
+                >
                   <SelectTrigger className="!h-10 md:text-base px-4 flex items-center">
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
-                      {Object.entries(categories).map(([key, label]) => (
-                        <SelectItem
-                          key={key}
-                          className="md:text-base"
-                          value={label}
-                        >
-                          {label}
-                        </SelectItem>
-                      ))}
+                    {Object.entries(categories).map(([key, label]) => (
+                      <SelectItem
+                        key={key}
+                        className="md:text-base"
+                        value={label}
+                      >
+                        {label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </Field>
 
-              <Field>
-                <Select value={filters.status} onValueChange={status => setFilters({...filters, status})}>
+              <Field className="md:col-span-3">
+                <Select
+                  value={filters.status}
+                  onValueChange={(status) => setFilters({ ...filters, status })}
+                >
                   <SelectTrigger className="!h-10 md:text-base px-4 flex items-center">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
-                    {
-                      Object.entries(statuses).map(([key, label]) => (
-                        <SelectItem
-                          key={key}
-                          className="md:text-base"
-                          value={label}
-                        >
-                          {label}
-                        </SelectItem>
-                      ))
-                    }
+                    {Object.entries(statuses).map(([key, label]) => (
+                      <SelectItem
+                        key={key}
+                        className="md:text-base"
+                        value={label}
+                      >
+                        {label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </Field>
+
+              <div className="md:col-span-1 flex items-center justify-end">
+                <Button
+                  onClick={() =>
+                    setFilters({ item: "", category: "", status: "" })
+                  }
+                  title="Clear filters"
+                  className="h-10 w-full md:px-3 whitespace-nowrap text-8xl bg-gradient-to-b from-amber-500 to-amber-600 border-amber-400 hover:from-amber-400 hover:to-amber-600 hover:border-amber-600 active:from-amber-400 active:to-amber-500 active:border-amber-700 text-white hover:text-amber-3 00"
+                >
+                  <FunnelX />
+                  <span className="sr-only">Clear Filters</span>
+                </Button>
+              </div>
             </div>
           </FieldGroup>
         </FieldSet>
@@ -103,66 +134,91 @@ export default function SearchFilters({ isMobile }: { isMobile: boolean }) {
           onOpenChange={setIsOpen}
           className="flex flex-col gap-2 my-4"
         >
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center justify-between gap-3">
+
+
             <Field>
               <Input
-                id="name"
+                id="item"
+                value={filters.item}
                 autoComplete="off"
-                placeholder="Search"
+                placeholder="Item Name"
                 className="h-10 text-sm md:text-base px-4"
+                onChange={(item) =>
+                  setFilters({ ...filters, item: item.target.value })
+                }
               />
             </Field>
+                          <CollapsibleTrigger asChild>
+                <Button variant="outline" size="icon" className=" text-white bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500"
+>
+                  <ListFilterPlus />
+                  <span className="sr-only">Toggle</span>
+                </Button>
+              </CollapsibleTrigger>
 
-            <CollapsibleTrigger asChild>
-              <Button variant="ghost" size="icon" className="size-8">
-                <ListFilterPlus />
-                <span className="sr-only">Toggle</span>
+              <Button
+                onClick={() =>
+                  setFilters({ item: "", category: "", status: "" })
+                }
+                variant="outline"
+                size="icon"
+                className=" text-white bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500"
+              >
+                <FunnelX />
+                <span className="sr-only">Clear Filters</span>
               </Button>
-            </CollapsibleTrigger>
           </div>
 
-          <CollapsibleContent className="flex flex-col gap-2">
 
+          <CollapsibleContent className="flex flex-col gap-2">
             <Field>
-              <Select>
+              <Select
+                value={filters.category}
+                onValueChange={(category) =>
+                  setFilters({ ...filters, category })
+                }
+              >
                 <SelectTrigger className="!h-10 md:text-base px-4 flex items-center">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent className="md:text-base">
-                  <SelectItem className="md:text-base" value="engineering">
-                    Food
-                  </SelectItem>
-                  <SelectItem className="md:text-base" value="design">
-                    Cleaning Supplies
-                  </SelectItem>
-                  <SelectItem className="md:text-base" value="marketing">
-                    Cosmetics
-                  </SelectItem>
-                  <SelectItem className="md:text-base" value="marketing">
-                    Medicine
-                  </SelectItem>
-                  <SelectItem className="md:text-base" value="marketing">
-                    Kitchen / Cooking Essentials
-                  </SelectItem>
-                  <SelectItem className="md:text-base" value="marketing">
-                    Hardware Tools
-                  </SelectItem>
+                  {Object.entries(categories).map(([key, label]) => (
+                    <SelectItem
+                      key={key}
+                      className="md:text-base"
+                      value={label}
+                    >
+                      {label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </Field>
 
             <Field>
-              <Select>
+              <Select
+                value={filters.status}
+                onValueChange={(status) => setFilters({ ...filters, status })}
+              >
                 <SelectTrigger className="!h-10 md:text-base px-4 flex items-center">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem className="md:text-base" value="engineering">Available</SelectItem>
-                  <SelectItem className="md:text-base" value="design">Unavailable</SelectItem>
+                  {Object.entries(statuses).map(([key, label]) => (
+                    <SelectItem
+                      key={key}
+                      className="md:text-base"
+                      value={label}
+                    >
+                      {label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </Field>
           </CollapsibleContent>
+
         </Collapsible>
       )}
     </>
