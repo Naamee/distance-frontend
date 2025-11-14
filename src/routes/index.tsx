@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import DaysDialog from "@/components/days-dialog";
+import DaysDialog from "@/components/dialog-days";
 import { useMeetStore } from "@/stores/meetStore";
 import { useEffect } from "react";
 

@@ -13,7 +13,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Toaster } from "@/components/ui/sonner";
-import AlertDialog from "@/components/alert-dialog";
+import AlertDialog from "@/components/dialog-alert";
 import MobileMenu from "@/components/mobile-menu";
 
 const RootLayout = () => {
