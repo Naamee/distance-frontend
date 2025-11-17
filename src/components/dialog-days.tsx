@@ -64,7 +64,7 @@ export default function DaysDialog() {
       <DialogTrigger asChild>
         <Button
           size="lg"
-          className="mt-4 md:mt-0 w-50 md:w-100 font-bold text-2xl h-15 bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500 active:mt-5 active:md:mt-12"
+          className="mt-4 md:mt-0 w-50 md:w-100 font-bold text-2xl h-15 bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500 active:mt-5 active:md:mt-12"
         >
           UPDATE
         </Button>
@@ -117,7 +117,7 @@ export default function DaysDialog() {
           <Button
             onClick={handleDelete}
             disabled={loading}
-            className="flex-1 md:text-base  font-bold bg-gradient-to-b from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-600 active:from-rose-400 active:to-rose-500"
+            className="flex-1 md:text-base font-bold bg-rose-600/80 border border-rose-600 hover:bg-gradient-to-b hover:from-rose-400 hover:to-rose-600 active:from-rose-400 active:to-rose-500"
           >
             {loading ? <Spinner /> : null}
             Delete
@@ -126,7 +126,7 @@ export default function DaysDialog() {
           <Button
             onClick={submit}
             disabled={loading}
-            className="flex-1 md:text-base font-bold bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500"
+            className="flex-1 md:text-base font-bold bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500"
           >
             {loading ? <Spinner /> : null}
             Submit
