@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, use } from "react";
 import { Field, FieldGroup, FieldSet } from "@/components/ui/field";
 import {
   Select,
@@ -32,6 +32,7 @@ export default function SearchFilters({
   setFilters: (filters: Filters) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   const categories: Record<string, string> = {
     food: "Food",
@@ -46,6 +47,14 @@ export default function SearchFilters({
     unavailable: "Unavailable",
   };
 
+  // Automatically show/hide clear filters button
+  useEffect(() => {
+    if (filters.item || filters.category || filters.status) {
+      setIsFiltersOpen(true);
+    } else {
+      setIsFiltersOpen(false);
+    }
+  }, [filters]);
   return (
     <>
       {!isMobile && (
@@ -89,7 +98,9 @@ export default function SearchFilters({
                 </Select>
               </Field>
 
-              <Field className="md:col-span-3">
+              <Field
+                className={`${isFiltersOpen ? "md:col-span-3" : "md:col-span-4"}`}
+              >
                 <Select
                   value={filters.status}
                   onValueChange={(status) => setFilters({ ...filters, status })}
@@ -110,19 +121,20 @@ export default function SearchFilters({
                   </SelectContent>
                 </Select>
               </Field>
-
-              <div className="md:col-span-1 flex items-center justify-end">
-                <Button
-                  onClick={() =>
-                    setFilters({ item: "", category: "", status: "" })
-                  }
-                  title="Clear filters"
-                  className="h-10 w-full md:px-3 whitespace-nowrap text-8xl bg-gradient-to-b from-amber-500 to-amber-600 border-amber-400 hover:from-amber-400 hover:to-amber-600 hover:border-amber-600 active:from-amber-400 active:to-amber-500 active:border-amber-700 text-white hover:text-amber-3 00"
-                >
-                  <FunnelX />
-                  <span className="sr-only">Clear Filters</span>
-                </Button>
-              </div>
+              {isFiltersOpen && (
+                <div className="md:col-span-1 flex items-center justify-end">
+                  <Button
+                    onClick={() =>
+                      setFilters({ item: "", category: "", status: "" })
+                    }
+                    title="Clear filters"
+                    className="h-10 w-full md:px-3 whitespace-nowrap text-8xl bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 hover:border-amber-600 active:from-amber-400 active:to-amber-500 active:border-amber-700 text-white hover:text-amber-3 00"
+                  >
+                    <FunnelX />
+                    <span className="sr-only">Clear Filters</span>
+                  </Button>
+                </div>
+              )}
             </div>
           </FieldGroup>
         </FieldSet>
@@ -135,8 +147,6 @@ export default function SearchFilters({
           className="flex flex-col gap-2 my-4"
         >
           <div className="flex items-center justify-between gap-3">
-
-
             <Field>
               <Input
                 id="item"
@@ -149,27 +159,27 @@ export default function SearchFilters({
                 }
               />
             </Field>
-                          <CollapsibleTrigger asChild>
-                <Button variant="outline" size="icon" className=" text-white bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500"
->
-                  <ListFilterPlus />
-                  <span className="sr-only">Toggle</span>
-                </Button>
-              </CollapsibleTrigger>
-
+            <CollapsibleTrigger asChild>
               <Button
-                onClick={() =>
-                  setFilters({ item: "", category: "", status: "" })
-                }
                 variant="outline"
                 size="icon"
-                className=" text-white bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500"
+                className=" text-white bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500"
               >
-                <FunnelX />
-                <span className="sr-only">Clear Filters</span>
+                <ListFilterPlus />
+                <span className="sr-only">Toggle</span>
               </Button>
-          </div>
+            </CollapsibleTrigger>
 
+            <Button
+              onClick={() => setFilters({ item: "", category: "", status: "" })}
+              variant="outline"
+              size="icon"
+              className=" text-white bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500"
+            >
+              <FunnelX />
+              <span className="sr-only">Clear Filters</span>
+            </Button>
+          </div>
 
           <CollapsibleContent className="flex flex-col gap-2">
             <Field>
@@ -218,7 +228,6 @@ export default function SearchFilters({
               </Select>
             </Field>
           </CollapsibleContent>
-
         </Collapsible>
       )}
     </>
