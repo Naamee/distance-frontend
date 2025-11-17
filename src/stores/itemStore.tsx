@@ -5,18 +5,17 @@ import { combine } from "zustand/middleware";
 interface ItemData {
   name: string;
   category: string;
-  quantity: number;
 }
 
-interface fetchCombinedData {
+interface FetchCombinedData {
+  id: number;
   name: string;
-  type: string;
   category: string;
   quantity: number;
 }
 
 interface FridgeData {
-  data: fetchCombinedData[];
+  data: FetchCombinedData[];
   pagination: {
     page: number;
     per_page: number;
@@ -51,13 +50,9 @@ export const useItemStore = create(
       resetError: () => set({ error: null }),
       postItem: async (item: ItemData) => {
         set({ error: null, loading: true });
-
-        if(item.name === '' || item.category === '' || item.quantity === 0) {
+        if(item.name === '' || item.category === '') {
           return set({error: 'Ensure all fields are complete', loading: false})
         }
-
-
-
         try {
             await axios.post("/fridge", item);
             return true;
@@ -93,6 +88,21 @@ export const useItemStore = create(
         } catch (error: any) {
           const message = axios.isAxiosError(error)
             ? error.response?.data?.message || "Item deletion failed"
+            : "An unexpected error occurred";
+          set({ error: message });
+          return false;
+        } finally {
+          set({ loading: false });
+        }
+      },
+      updateQuantity: async ({id, type, quantity}: { id: number, type: string, quantity: number}) => {
+        set({ error: null, loading: true });
+        try {
+          await axios.post(`/fridge/update_quantity`, { id, type, quantity });
+          return true;
+        } catch (error: any) {
+          const message = axios.isAxiosError(error)
+            ? error.response?.data?.message || "Item update failed"
             : "An unexpected error occurred";
           set({ error: message });
           return false;
