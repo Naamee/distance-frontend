@@ -3,15 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   Field,
-  FieldContent,
-  FieldDescription,
-  FieldError,
   FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSeparator,
   FieldSet,
-  FieldTitle,
 } from '@/components/ui/field';
 import {
   Select,
@@ -23,7 +16,6 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -43,13 +35,13 @@ function Movies() {
             <FieldGroup>
               <div className="grid grid-cols-2 gap-4">
                 <Field>
-                  <Input id="name" autoComplete="off" placeholder="New Movie" />
+                  <Input id="movie" autoComplete="off" placeholder="New Movie" />
                 </Field>
                 <Button>Add Movie</Button>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <Field>
-                  <Input id="name" autoComplete="off" placeholder="Search" />
+                  <Input id="search" autoComplete="off" placeholder="Search" />
                 </Field>
 
                 <Field>
