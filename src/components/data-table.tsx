@@ -27,6 +27,13 @@ interface DataTableProps<TData, TValue> {
   onPageChange: (newPage: number) => void;
 }
 
+interface NavigationBtns {
+  icon: React.FC<React.SVGProps<SVGSVGElement>>;
+  title: string;
+  onClick: () => void;
+  disabled: boolean;
+}
+
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -50,6 +57,21 @@ export function DataTable<TData, TValue>({
       onPageChange(newPage);
     },
   });
+
+  const navigationBtns: NavigationBtns[] = [
+    {
+      icon: ArrowLeft,
+      title: "Previous page",
+      onClick: () => onPageChange(pageIndex - 1),
+      disabled: pageIndex === 1,
+    },
+    {
+      icon: ArrowRight,
+      title: "Next page",
+      onClick: () => onPageChange(pageIndex + 1),
+      disabled: pageIndex == pageSize,
+    },
+  ];
 
   return (
     <div>
@@ -121,32 +143,30 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
+      {/* Pagination Controls */}
       <div className="flex items-center justify-center space-x-2 py-4 gap-3">
-        <Button
-          variant="outline"
-          className="text-white hover:text-white bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500 disabled:bg-gradient-to-b disabled:from-gray-300 disabled:to-gray-400   disabled:border-gray-300"
-          size="sm"
-          title="Previous page"
-          onClick={() => onPageChange(pageIndex - 1)}
-          disabled={pageIndex === 1}
-        >
-          <ArrowLeft />
-          <span className="sr-only">Previous Page</span>
-        </Button>
-        <p>
-          {pageIndex} of {pageSize}
-        </p>
-        <Button
-          variant="outline"
-          className="text-white hover:text-white bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500 disabled:bg-gradient-to-b disabled:from-gray-300 disabled:to-gray-400  disabled:border-gray-300"
-          size="sm"
-          title="Next page"
-          onClick={() => onPageChange(pageIndex + 1)}
-          disabled={pageIndex == pageSize}
-        >
-          <ArrowRight />
-          <span className="sr-only">Next Page</span>
-        </Button>
+        {navigationBtns.map((btn, index) => (
+          <div key={index} className="flex items-center gap-5">
+            <Button
+              variant="outline"
+              className="text-white hover:text-white bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600
+            active:from-amber-400 active:to-amber-500 disabled:bg-gradient-to-b disabled:from-gray-300 disabled:to-gray-400   disabled:border-gray-300"
+              size="sm"
+              title={btn.title}
+              onClick={btn.onClick}
+              disabled={btn.disabled}
+            >
+              <btn.icon />
+              <span className="sr-only">{btn.title}</span>
+            </Button>
+
+            {index === 0 ? (
+              <p>
+                Page {pageIndex} of {pageSize}
+              </p>
+            ) : null}
+          </div>
+        ))}
       </div>
     </div>
   );

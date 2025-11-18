@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { act, useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +18,12 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Calendar } from "@/components/ui/calendar";
 import { useMeetStore } from "@/stores/meetStore";
+
+interface Actions {
+  label: string
+  class: string
+  action: () => Promise<void>
+}
 
 export default function DaysDialog() {
   const [open, setOpen] = useState(false);
@@ -39,19 +45,32 @@ export default function DaysDialog() {
     resetError();
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (): Promise<void> => {
     const success = await deleteMeet();
     fetchMeet(); // refresh data after delete
     if (success) setDialogOpen(false);
   };
 
-  const submit = async () => {
+  const submit = async (): Promise<void> => {
     if (date) {
       const success = await updateMeet(date.toLocaleDateString("en-CA")); // format YYYY-MM-DD
       fetchMeet(); // refresh data after update
       if (success) setDialogOpen(false);
     }
   };
+
+  const actions: Actions[] = [
+    {
+      label: "Delete",
+      class: "bg-rose-600/80 border-rose-600 hover:from-rose-400 hover:to-rose-600 active:from-rose-400 active:to-rose-500",
+      action: handleDelete,
+    },
+    {
+      label: "Submit",
+      class: "bg-amber-600/80 border-amber-600 hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500",
+      action: submit,
+    },
+  ];
 
   useEffect(() => {
     if (data.meet_date) {
@@ -64,7 +83,8 @@ export default function DaysDialog() {
       <DialogTrigger asChild>
         <Button
           size="lg"
-          className="mt-4 md:mt-0 w-50 md:w-100 font-bold text-2xl h-15 bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500 active:mt-5 active:md:mt-12"
+          className="mt-4 md:mt-0 w-50 md:w-100 font-bold text-2xl h-15 bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600
+          active:from-amber-400 active:to-amber-500 active:mt-5 active:md:mt-12"
         >
           UPDATE
         </Button>
@@ -113,24 +133,19 @@ export default function DaysDialog() {
           </Alert>
         )}
 
+        {/* action buttons */}
         <div className="flex flex-col md:flex-row gap-2 w-full">
-          <Button
-            onClick={handleDelete}
-            disabled={loading}
-            className="flex-1 md:text-base font-bold bg-rose-600/80 border border-rose-600 hover:bg-gradient-to-b hover:from-rose-400 hover:to-rose-600 active:from-rose-400 active:to-rose-500"
-          >
-            {loading ? <Spinner /> : null}
-            Delete
-          </Button>
-
-          <Button
-            onClick={submit}
-            disabled={loading}
-            className="flex-1 md:text-base font-bold bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500"
-          >
-            {loading ? <Spinner /> : null}
-            Submit
-          </Button>
+          {actions.map((action, index) => (
+            <Button
+              key={index}
+              onClick={action.action}
+              disabled={loading}
+              className={`flex-1 md:text-base font-bold border hover:bg-gradient-to-b ${action.class}`}
+            >
+              {loading ? <Spinner /> : null}
+              {action.label}
+            </Button>
+          ))}
         </div>
       </DialogContent>
     </Dialog>

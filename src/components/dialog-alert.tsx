@@ -36,7 +36,8 @@ export default function AlertDialog({
           <Button
             title="Alerts"
             variant="outline"
-            className="rounded-full text-8xl bg-gradient-to-b from-gray-200 to-gray-400 border-white hover:from-amber-200 hover:to-amber-500 hover:border-amber-600 active:from-amber-400 active:to-amber-600 active:border-amber-700 text-white hover:text-amber-600"
+            className="rounded-full text-8xl bg-gradient-to-b from-gray-200 to-gray-400 border-white hover:from-amber-200 hover:to-amber-500 hover:border-amber-600
+            active:from-amber-400 active:to-amber-600 active:border-amber-700 text-white hover:text-amber-600"
             size={isMobile ? "icon" : "icon-lg"}
           >
             <Bell className="h-5 w-5" />
