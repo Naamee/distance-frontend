@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
+import { toast } from "sonner";
+import { useState, useEffect, use } from "react";
 import { useMediaQuery } from "react-responsive";
+import { type ColumnDef } from "@tanstack/react-table";
 import { createFileRoute } from "@tanstack/react-router";
 import { Field, FieldGroup, FieldSet } from "@/components/ui/field";
 import {
@@ -9,29 +11,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemFooter,
-  ItemTitle,
-} from "@/components/ui/item";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { type ColumnDef } from "@tanstack/react-table";
-import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
-import { AlertCircleIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { DataTable } from "@/components/data-table";
 import { Separator } from "@/components/ui/separator";
 import SearchFilters from "@/components/search-filters";
+import { AlertCircleIcon } from "lucide-react";
+import ItemDialog from "@/components/dialog-item";
+import UsageDialog from "@/components/dialog-usage";
+import EntriesDialog from "@/components/dialog-entries";
 import { useItemStore } from "@/stores/itemStore";
-import { DataTable } from "@/components/data-table";
 
 interface CombinedItemData {
+  id: number;
   name: string;
-  type: string;
   category: string;
   quantity: number;
 }
@@ -64,7 +59,6 @@ function Fridge() {
   const [newItem, setNewItem] = useState({
     name: "",
     category: "",
-    quantity: 0,
   });
   const [filters, setFilters] = useState({
     item: "",
@@ -106,21 +100,30 @@ function Fridge() {
           <Button
             variant="outline"
             size="sm"
-            className={`border p-2 ${quantity > 0 ? "border-green-600 text-green-600 hover:text-green-600" : "border-red-600 text-red-600 hover:text-red-600"}`}
+            className={`border p-2 ${status === "Available" ? "px-4" : ""} ${quantity > 0 ? "border-green-600 text-green-600 hover:text-green-600" : "border-red-600 text-red-600 hover:text-red-600"}`}
           >
             {status}
           </Button>
         );
       },
     },
+    {
+      accessorKey: "actions",
+      header: "",
+      cell: ({ row }) => (
+        <div className="flex gap-2">
+          <UsageDialog item={row.original} />
+          <EntriesDialog item={row.original} />
+        </div>
+      ),
+    },
   ];
 
   const submitItem = async () => {
-    // handle submission logic here
     const success = await postItem(newItem);
     if (success) {
       // reset form
-      setNewItem({ name: "", category: "", quantity: 0 });
+      setNewItem({ name: "", category: "" });
       setView("all");
       toast.success("Item added!");
     }
@@ -131,6 +134,13 @@ function Fridge() {
       await fetchCombinedItems(page, filters);
     })();
   }, [page, filters]);
+
+  useEffect(() => {
+    // reset on view change
+    setNewItem({ name: "", category: "" });
+    setFilters({ item: "", category: "", status: "" });
+    setPage(1);
+  }, [currentView]);
 
   return (
     <div
@@ -201,22 +211,6 @@ function Fridge() {
                     </SelectContent>
                   </Select>
                 </Field>
-
-                <Field>
-                  <Input
-                    id="username"
-                    type="number"
-                    autoComplete="off"
-                    placeholder="Quantity"
-                    className="h-10 text-sm md:text-base px-4"
-                    onChange={(quantity) =>
-                      setNewItem({
-                        ...newItem,
-                        quantity: parseInt(quantity.target.value),
-                      })
-                    }
-                  />
-                </Field>
               </FieldGroup>
             </FieldSet>
 
@@ -233,7 +227,7 @@ function Fridge() {
 
             <Button
               onClick={submitItem}
-              className="md:h-10 mt-2 md:text-base bg-gradient-to-b from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500 active:mt-3"
+              className="md:h-10 mt-2 md:text-base bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500 active:mt-3"
             >
               {loading ? <Spinner /> : null}
               Submit
@@ -243,7 +237,13 @@ function Fridge() {
 
         {currentView === "all" && (
           <div>
-            {<SearchFilters isMobile={isMobile} filters={filters} setFilters={setFilters}/>}
+            {
+              <SearchFilters
+                isMobile={isMobile}
+                filters={filters}
+                setFilters={setFilters}
+              />
+            }
             {!isMobile && (
               <DataTable
                 columns={columns}
@@ -257,25 +257,11 @@ function Fridge() {
             {isMobile && (
               <div className="flex flex-col max-h-[calc(100vh-22rem)] overflow-auto border border-amber-600/40 bg-amber-600/5 rounded-sm">
                 {combinedItems.data.map((item, index) => (
-                  <Item
+                  <ItemDialog
                     key={index}
-                    className={`relative bg-white hover:bg-white/30 active:bg-white/40 rounded-none
-                    ${index !== combinedItems.data.length -1 ? "border-amber-600/10" : ""} `}
-                  >
-                    <ItemContent>
-                      <ItemTitle>{item.name}</ItemTitle>
-                      <ItemDescription>{item.category}</ItemDescription>
-                    </ItemContent>
-                    <ItemActions />
-                    <ItemFooter>
-                      <span>Qty: {item.quantity}</span>
-                      <span
-                        className={`${item.quantity > 0 ? "text-green-600" : "text-red-600"}`}
-                      >
-                        {item.quantity > 0 ? "Available" : "Unavailable"}
-                      </span>
-                    </ItemFooter>
-                  </Item>
+                    isLast={index == combinedItems.data.length - 1}
+                    item={item}
+                  />
                 ))}
               </div>
             )}

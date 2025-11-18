@@ -95,19 +95,14 @@ export const useItemStore = create(
           set({ loading: false });
         }
       },
-      updateQuantity: async ({id, type, quantity}: { id: number, type: string, quantity: number}) => {
-        set({ error: null, loading: true });
+      updateQuantity: async ({id, type, quantity}: { id: number, type: string, quantity: number}): Promise<void | string> => {
         try {
-          await axios.post(`/fridge/update_quantity`, { id, type, quantity });
-          return true;
+          await axios.post('/fridge_item', { id, type, quantity });
         } catch (error: any) {
           const message = axios.isAxiosError(error)
             ? error.response?.data?.message || "Item update failed"
             : "An unexpected error occurred";
-          set({ error: message });
-          return false;
-        } finally {
-          set({ loading: false });
+          return message;
         }
       },
     })
