@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import { type ColumnDef } from "@tanstack/react-table";
 import { createFileRoute } from "@tanstack/react-router";
@@ -55,7 +55,9 @@ function Fridge() {
     hardware: "Hardware Tools",
   };
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState<number>(1);
+  const [entryPage, setEntryPage] = useState<number>(1);
+  const [openDialogId, setOpenDialogId] = useState<number | null>(null);
   const [newItem, setNewItem] = useState({
     name: "",
     category: "",
@@ -113,7 +115,15 @@ function Fridge() {
       cell: ({ row }) => (
         <div className="flex gap-2">
           <UsageDialog item={row.original} />
-          <EntriesDialog item={row.original} />
+          <EntriesDialog
+            item={row.original}
+            page={entryPage}
+            setPage={setEntryPage}
+            open={openDialogId === row.original.id}
+            onOpenChange={(isOpen: boolean) => {
+              setOpenDialogId(isOpen ? row.original.id : null);
+            }}
+          />
         </div>
       ),
     },
