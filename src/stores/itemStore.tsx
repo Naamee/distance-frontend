@@ -21,7 +21,7 @@ interface FridgeData {
     per_page: number;
     total_items: number;
     total_pages: number;
-  }
+  };
 }
 
 interface Filters {
@@ -29,7 +29,6 @@ interface Filters {
   category: string;
   status: string;
 }
-
 
 export const useItemStore = create(
   combine(
@@ -50,12 +49,15 @@ export const useItemStore = create(
       resetError: () => set({ error: null }),
       postItem: async (item: ItemData) => {
         set({ error: null, loading: true });
-        if(item.name === '' || item.category === '') {
-          return set({error: 'Ensure all fields are complete', loading: false})
+        if (item.name === "" || item.category === "") {
+          return set({
+            error: "Ensure all fields are complete",
+            loading: false,
+          });
         }
         try {
-            await axios.post("/fridge", item);
-            return true;
+          await axios.post("/fridge", item);
+          return true;
         } catch (error: any) {
           const message = axios.isAxiosError(error)
             ? error.response?.data?.message || "Item submission failed"
@@ -65,11 +67,18 @@ export const useItemStore = create(
         } finally {
           set({ loading: false });
         }
-        },
+      },
       fetchCombinedItems: async (page: number, filters: Filters) => {
         set({ error: null, loading: true });
         try {
-          const response = await axios.get("/fridge", { params: { page, item: filters.item, category: filters.category, status: filters.status  } });
+          const response = await axios.get("/fridge", {
+            params: {
+              page,
+              item: filters.item,
+              category: filters.category,
+              status: filters.status,
+            },
+          });
           set({ combinedItems: response.data });
         } catch (error: any) {
           const message = axios.isAxiosError(error)
@@ -80,24 +89,17 @@ export const useItemStore = create(
           set({ loading: false });
         }
       },
-      deleteItem: async (itemId: string) => {
-        set({ error: null, loading: true });
+      updateQuantity: async ({
+        id,
+        type,
+        quantity,
+      }: {
+        id: number;
+        type: string;
+        quantity: number;
+      }): Promise<void | string> => {
         try {
-          await axios.delete(`/fridge/${itemId}`);
-          return true;
-        } catch (error: any) {
-          const message = axios.isAxiosError(error)
-            ? error.response?.data?.message || "Item deletion failed"
-            : "An unexpected error occurred";
-          set({ error: message });
-          return false;
-        } finally {
-          set({ loading: false });
-        }
-      },
-      updateQuantity: async ({id, type, quantity}: { id: number, type: string, quantity: number}): Promise<void | string> => {
-        try {
-          await axios.post('/fridge_item', { id, type, quantity });
+          await axios.post("/fridge_item", { id, type, quantity });
         } catch (error: any) {
           const message = axios.isAxiosError(error)
             ? error.response?.data?.message || "Item update failed"

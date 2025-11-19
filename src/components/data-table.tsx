@@ -103,7 +103,7 @@ export function DataTable<TData, TValue>({
             {loading &&
               [...Array(10)].map((_, index) => (
                 <TableRow key={index} className="border-amber-600/40">
-                  {columns.map((column, colIndex) => (
+                  {columns.map((_, colIndex) => (
                     <TableCell key={colIndex}>
                       <Skeleton className="h-5.5 w-full" />
                     </TableCell>
