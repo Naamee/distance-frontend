@@ -11,6 +11,7 @@ interface FridgeEntryData {
 
 interface FridgeEntryResponse {
   name: string;
+  category: string;
   data: FridgeEntryData[];
   pagination: {
     page: number;
@@ -25,6 +26,7 @@ export const useEntryStore = create(
     {
       entries: {
         name: "",
+        category: "",
         data: [],
         pagination: {
           page: 1,
@@ -38,16 +40,19 @@ export const useEntryStore = create(
     },
     (set) => ({
       fetchItemEntries: async (itemId: number, page: number) => {
+        set({ error: null, loading: true });
         try {
           const response = await axios.get(`/fridge/${itemId}/entries`, {
             params: { page },
           });
-          return response.data;
+          set({ entries: response.data});
         } catch (error: any) {
           const message = axios.isAxiosError(error)
             ? error.response?.data?.message || "Failed to fetch entries"
             : "An unexpected error occurred";
           set({ error: message });
+        } finally {
+          set({ loading: false });
         }
       },
     })

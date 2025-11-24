@@ -107,6 +107,39 @@ export const useItemStore = create(
           return message;
         }
       },
+      updateItemDetails: async ({
+        id,
+        name,
+        category,
+      }: {
+        id: number;
+        name: string;
+        category: string;
+      }): Promise<void | string> => {
+        try {
+          await axios.put(`/fridge/${id}`, { name, category });
+        } catch (error: any) {
+          const message = axios.isAxiosError(error)
+            ? error.response?.data?.message || "Item update failed"
+            : "An unexpected error occurred";
+          return message;
+        }
+      },
+      deleteItem: async (id: number): Promise<Boolean> => {
+        set ({ loading: true, error: null });
+        try {
+          await axios.delete(`/fridge/${id}`);
+          return true;
+        } catch (error: any) {
+          const message = axios.isAxiosError(error)
+            ? error.response?.data?.message || "Item deletion failed"
+            : "An unexpected error occurred";
+          set({ error: message });
+          return false;
+        } finally {
+          set ({ loading: false });
+        }
+      }
     })
   )
 );

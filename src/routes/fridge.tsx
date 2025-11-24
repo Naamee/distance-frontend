@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import { type ColumnDef } from "@tanstack/react-table";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Field, FieldGroup, FieldSet } from "@/components/ui/field";
 import {
   Select,
@@ -18,10 +18,11 @@ import { Spinner } from "@/components/ui/spinner";
 import { DataTable } from "@/components/data-table";
 import { Separator } from "@/components/ui/separator";
 import SearchFilters from "@/components/search-filters";
-import { AlertCircleIcon } from "lucide-react";
+import { AlertCircleIcon, List, Trash2 } from "lucide-react";
 import ItemDialog from "@/components/dialog-item";
 import UsageDialog from "@/components/dialog-usage";
-import EntriesDialog from "@/components/dialog-entries";
+import ItemDeleteDialog from "@/components/dialog-delete-item";
+import EditItemDialog from "@/components/dialog-item-edit";
 import { useItemStore } from "@/stores/itemStore";
 
 interface CombinedItemData {
@@ -56,8 +57,6 @@ function Fridge() {
   };
 
   const [page, setPage] = useState<number>(1);
-  const [entryPage, setEntryPage] = useState<number>(1);
-  const [openDialogId, setOpenDialogId] = useState<number | null>(null);
   const [newItem, setNewItem] = useState({
     name: "",
     category: "",
@@ -113,17 +112,18 @@ function Fridge() {
       accessorKey: "actions",
       header: "",
       cell: ({ row }) => (
-        <div className="flex gap-2">
+        <div className="flex justify-end">
+          <div  className="flex border border-amber-500 bg-amber-500/20 rounded-md gap-0.5">
           <UsageDialog item={row.original} />
-          <EntriesDialog
-            item={row.original}
-            page={entryPage}
-            setPage={setEntryPage}
-            open={openDialogId === row.original.id}
-            onOpenChange={(isOpen: boolean) => {
-              setOpenDialogId(isOpen ? row.original.id : null);
-            }}
-          />
+          <Link to="/fridge-entries/$itemId" params={{ itemId: row.original.id }} >
+            <Button size="sm" title="View Entries" className="rounded-none hover:text-white bg-white text-amber-600/80 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500">
+            <List />
+            <span className="sr-only">View Entries</span>
+            </Button>
+          </Link>
+          <EditItemDialog item={row.original} />
+          <ItemDeleteDialog item={row.original} />
+          </div>
         </div>
       ),
     },
@@ -145,11 +145,19 @@ function Fridge() {
     })();
   }, [page, filters]);
 
+  // Reset states when switching views
   useEffect(() => {
-    // reset on view change
-    setNewItem({ name: "", category: "" });
-    setFilters({ item: "", category: "", status: "" });
-    setPage(1);
+    if (currentView === "new") {
+        setNewItem({ name: "", category: "" });
+    }
+
+    if (currentView === "all") {
+      requestAnimationFrame(() => {
+        setFilters({ item: "", category: "", status: "" });
+        setPage(1);
+
+      })
+    }
   }, [currentView]);
 
   return (
@@ -159,6 +167,7 @@ function Fridge() {
       <div
         className={`bg-white border border-amber-500 p-10 transition-all duration-300 rounded-sm w-full ${currentView === "all" ? "h-full md:max-w-6xl" : "md:max-w-md"} `}
       >
+        {/* menu buttons */}
         <div className="flex justify-center h-10">
           {Object.entries(menuButtons).flatMap(([key, label], index, arr) => [
             <Button

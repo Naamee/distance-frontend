@@ -39,10 +39,10 @@ export default function DaysDialog() {
     loading,
   } = useMeetStore();
 
-  // ensure error is cleared when dialog is closed
-  const handleClose = () => {
-    setDialogOpen(!dialogOpen);
-    resetError();
+
+  const handleOpenChange = (open: boolean) => {
+    setDialogOpen(open);
+    if (!open) resetError();
   };
 
   const handleDelete = async (): Promise<void> => {
@@ -79,7 +79,7 @@ export default function DaysDialog() {
   }, [data.meet_date]);
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={handleClose}>
+    <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button
           size="lg"
