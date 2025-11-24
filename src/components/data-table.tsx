@@ -17,6 +17,7 @@ import {
 import { Skeleton } from "./ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useItemStore } from "@/stores/itemStore";
+import { useEntryStore } from "@/stores/entryStore";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
@@ -42,6 +43,7 @@ export function DataTable<TData, TValue>({
   onPageChange,
 }: DataTableProps<TData, TValue>) {
   const { loading } = useItemStore();
+  const { loading: entryLoading } = useEntryStore();
   const table = useReactTable({
     data,
     columns,
@@ -83,7 +85,7 @@ export function DataTable<TData, TValue>({
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
-                      className="text-amber-600 font-bold"
+                      className={`text-amber-600 font-bold ${['name', 'type'].includes(header.id) ? 'pl-5' : header.id == 'actions' ? 'pr-5' : ''}`}
                       key={header.id}
                     >
                       {header.isPlaceholder
@@ -100,7 +102,7 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {/* Show loading skeletons when loading */}
-            {loading &&
+            {(loading || entryLoading) &&
               [...Array(10)].map((_, index) => (
                 <TableRow key={index} className="border-amber-600/40">
                   {columns.map((_, colIndex) => (
@@ -112,7 +114,7 @@ export function DataTable<TData, TValue>({
               ))}
 
             {/* Show data rows when not loading, or 'no result' text if no data */}
-            {!loading && table.getRowModel().rows?.length
+            {(!loading && !entryLoading) && table.getRowModel().rows?.length
               ? table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
@@ -120,7 +122,7 @@ export function DataTable<TData, TValue>({
                     data-state={row.getIsSelected() && "selected"}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell key={cell.id} className={`${cell.id.endsWith('name') || cell.id.endsWith('type') ? 'pl-5' : cell.id.endsWith('actions') ? 'pr-5' : ''}`}>
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -129,7 +131,7 @@ export function DataTable<TData, TValue>({
                     ))}
                   </TableRow>
                 ))
-              : !loading && (
+              : (!loading && !entryLoading) && (
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}

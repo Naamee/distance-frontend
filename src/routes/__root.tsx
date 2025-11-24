@@ -39,7 +39,7 @@ const RootLayout = () => {
           duration: 40000,
           classNames: {
             success:
-              "text-green-700 flex px-3 py-2 items-center gap-3 bg-white border border-green-700 shadow-md text-sm rounded-sm",
+              "md:text-xl md:pr-20 text-green-700 flex px-3 py-2 items-center gap-3 bg-white border border-green-700 shadow-md text-sm rounded-sm",
           },
         }}
       />
