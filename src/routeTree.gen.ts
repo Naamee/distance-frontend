@@ -16,6 +16,7 @@ import { Route as FridgeRouteImport } from './routes/fridge'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FridgeEntriesItemIdRouteImport } from './routes/fridge-entries/$itemId'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -52,6 +53,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FridgeEntriesItemIdRoute = FridgeEntriesItemIdRouteImport.update({
+  id: '/fridge-entries/$itemId',
+  path: '/fridge-entries/$itemId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/movies': typeof MoviesRoute
   '/register': typeof RegisterRoute
+  '/fridge-entries/$itemId': typeof FridgeEntriesItemIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/movies': typeof MoviesRoute
   '/register': typeof RegisterRoute
+  '/fridge-entries/$itemId': typeof FridgeEntriesItemIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/movies': typeof MoviesRoute
   '/register': typeof RegisterRoute
+  '/fridge-entries/$itemId': typeof FridgeEntriesItemIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/movies'
     | '/register'
+    | '/fridge-entries/$itemId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/movies'
     | '/register'
+    | '/fridge-entries/$itemId'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/movies'
     | '/register'
+    | '/fridge-entries/$itemId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +131,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MoviesRoute: typeof MoviesRoute
   RegisterRoute: typeof RegisterRoute
+  FridgeEntriesItemIdRoute: typeof FridgeEntriesItemIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fridge-entries/$itemId': {
+      id: '/fridge-entries/$itemId'
+      path: '/fridge-entries/$itemId'
+      fullPath: '/fridge-entries/$itemId'
+      preLoaderRoute: typeof FridgeEntriesItemIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -183,6 +203,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MoviesRoute: MoviesRoute,
   RegisterRoute: RegisterRoute,
+  FridgeEntriesItemIdRoute: FridgeEntriesItemIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
