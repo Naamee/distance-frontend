@@ -13,20 +13,11 @@ import {
   ItemDescription,
 } from "@/components/ui/item";
 import { ChevronsUp, ChevronsDown } from "lucide-react";
+import { type EntryDialogProps } from "@/types";
 
-interface FridgeEntryData {
-  id: number;
-  type: string;
-  quantity: number;
-  date: string;
-}
 
-interface ItemDialogProps {
-  isLast: boolean;
-  item: FridgeEntryData;
-}
 
-export default function EntryDialog({ isLast, item }: ItemDialogProps) {
+export default function EntryDialog({ isLast, item }: EntryDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>

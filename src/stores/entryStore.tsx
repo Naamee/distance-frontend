@@ -1,25 +1,7 @@
 import axios from "axios";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
-
-interface FridgeEntryData {
-  id: number;
-  type: string;
-  quantity: number;
-  date: string;
-}
-
-interface FridgeEntryResponse {
-  name: string;
-  category: string;
-  data: FridgeEntryData[];
-  pagination: {
-    page: number;
-    per_page: number;
-    total_items: number;
-    total_pages: number;
-  };
-}
+import { type FridgeEntryResponse, type FridgeEntryData } from "@/types";
 
 export const useEntryStore = create(
   combine(

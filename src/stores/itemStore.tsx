@@ -1,34 +1,7 @@
 import axios from "axios";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
-
-interface ItemData {
-  name: string;
-  category: string;
-}
-
-interface FetchCombinedData {
-  id: number;
-  name: string;
-  category: string;
-  quantity: number;
-}
-
-interface FridgeData {
-  data: FetchCombinedData[];
-  pagination: {
-    page: number;
-    per_page: number;
-    total_items: number;
-    total_pages: number;
-  };
-}
-
-interface Filters {
-  item: string;
-  category: string;
-  status: string;
-}
+import { type FridgeData, type ItemData, type Filters } from "@/types";
 
 export const useItemStore = create(
   combine(

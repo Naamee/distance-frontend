@@ -19,21 +19,7 @@ import { Button } from "@/components/ui/button";
 import { useItemStore } from "@/stores/itemStore";
 import { useEntryStore } from "@/stores/entryStore";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  pageIndex: number;
-  pageSize: number;
-  onPageChange: (newPage: number) => void;
-}
-
-interface NavigationBtns {
-  icon: React.FC<React.SVGProps<SVGSVGElement>>;
-  title: string;
-  onClick: () => void;
-  disabled: boolean;
-}
+import { type DataTableProps, type NavigationBtns } from "@/types";
 
 export function DataTable<TData, TValue>({
   columns,

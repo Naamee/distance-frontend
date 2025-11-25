@@ -1,11 +1,8 @@
 import axios from "axios";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
+import { type MeetData } from "@/types";
 
-interface MeetData {
-  meet_date: string | null;
-  remaining_days: number;
-}
 
 export const useMeetStore = create(
   combine(

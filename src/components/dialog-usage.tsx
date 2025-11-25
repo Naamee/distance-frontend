@@ -22,13 +22,7 @@ import { ClipboardMinus, AlertCircleIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useItemStore } from "@/stores/itemStore";
-
-interface CombinedItemData {
-  id: number;
-  name: string;
-  category: string;
-  quantity: number;
-}
+import { type CombinedItemData } from "@/types";
 
 export default function UsageDialog({ item }: { item: CombinedItemData }) {
   const [open, setOpen] = useState(false);

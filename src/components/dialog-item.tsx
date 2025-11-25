@@ -14,19 +14,8 @@ import {
   ItemFooter,
   ItemTitle,
 } from "@/components/ui/item";
-
-interface FetchCombinedData {
-  id: number;
-  name: string;
-  category: string;
-  quantity: number;
-}
-
-interface ItemDialogProps {
-  isLast: boolean;
-  item: FetchCombinedData
-}
-
+import { Button } from "@/components/ui/button";
+import { type ItemDialogProps } from "@/types";
 
 export default function ItemDialog({isLast, item}: ItemDialogProps) {
   return (

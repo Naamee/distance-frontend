@@ -18,12 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Calendar } from "@/components/ui/calendar";
 import { useMeetStore } from "@/stores/meetStore";
-
-interface Actions {
-  label: string
-  class: string
-  action: () => Promise<void>
-}
+import { type Actions } from "@/types";
 
 export default function DaysDialog() {
   const [open, setOpen] = useState(false);

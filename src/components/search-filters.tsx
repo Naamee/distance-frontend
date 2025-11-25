@@ -15,12 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ListFilterPlus, FunnelX } from "lucide-react";
-
-interface Filters {
-  item: string;
-  category: string;
-  status: string;
-}
+import { type Filters } from "@/types";
 
 export default function SearchFilters({
   isMobile,

@@ -23,14 +23,8 @@ import ItemDialog from "@/components/dialog-item";
 import UsageDialog from "@/components/dialog-usage";
 import ItemDeleteDialog from "@/components/dialog-delete-item";
 import EditItemDialog from "@/components/dialog-item-edit";
-import { useItemStore } from "@/stores/itemStore";
-
-interface CombinedItemData {
-  id: number;
-  name: string;
-  category: string;
-  quantity: number;
-}
+import { AlertCircleIcon, List } from "lucide-react";
+import { type CombinedItemData } from "@/types";
 
 export const Route = createFileRoute("/fridge")({
   component: Fridge,
