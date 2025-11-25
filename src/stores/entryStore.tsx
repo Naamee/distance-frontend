@@ -21,6 +21,7 @@ export const useEntryStore = create(
       error: null as string | null,
     },
     (set) => ({
+      resetError: () => set({ error: null }),
       fetchItemEntries: async (itemId: number, page: number) => {
         set({ error: null, loading: true });
         try {
@@ -33,6 +34,31 @@ export const useEntryStore = create(
             ? error.response?.data?.message || "Failed to fetch entries"
             : "An unexpected error occurred";
           set({ error: message });
+        } finally {
+          set({ loading: false });
+        }
+      },
+      updateEntry: async (id: number, entryData: Partial<FridgeEntryData>): Promise<void | string> => {
+        try {
+          await axios.put(`/fridge_entry/${id}`, entryData);
+        } catch (error: any) {
+          const message = axios.isAxiosError(error)
+            ? error.response?.data?.message || "Failed to update entry"
+            : "An unexpected error occurred";
+          return message;
+        }
+      },
+      deleteEntry: async (id: number): Promise<Boolean> => {
+        set({ error: null, loading: true });
+        try {
+          await axios.delete(`/fridge_entry/${id}`);
+          return true;
+        } catch (error: any) {
+          const message = axios.isAxiosError(error)
+            ? error.response?.data?.message || "Failed to delete entry"
+            : "An unexpected error occurred";
+          set({ error: message });
+          return false;
         } finally {
           set({ loading: false });
         }

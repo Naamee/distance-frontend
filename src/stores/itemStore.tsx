@@ -72,7 +72,7 @@ export const useItemStore = create(
         quantity: number;
       }): Promise<void | string> => {
         try {
-          await axios.post("/fridge_item", { id, type, quantity });
+          await axios.post("/fridge_entry", { id, type, quantity });
         } catch (error: any) {
           const message = axios.isAxiosError(error)
             ? error.response?.data?.message || "Item update failed"
