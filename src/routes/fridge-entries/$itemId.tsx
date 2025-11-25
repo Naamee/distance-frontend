@@ -1,19 +1,14 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "react-responsive";
 import { DataTable } from "@/components/data-table";
 import { useEntryStore } from "@/stores/entryStore";
 import { type ColumnDef } from "@tanstack/react-table";
 import { createFileRoute } from "@tanstack/react-router";
 import EntryDialog from "@/components/dialog-entry";
-import { ChevronsDown, ChevronsUp, Pencil, Trash2 } from "lucide-react";
-
-interface EntryData {
-  id: number;
-  type: string;
-  quantity: number;
-  date: string;
-}
+import EditEntryDialog from "@/components/dialog-entry-edit";
+import DeleteEntryDialog from "@/components/dialog-entry-delete";
+import { ChevronsDown, ChevronsUp } from "lucide-react";
+import { type FridgeEntryData } from "@/types";
 
 export const Route = createFileRoute("/fridge-entries/$itemId")({
   parseParams: (params) => ({
@@ -29,7 +24,7 @@ function FridgeEntries() {
 
   const { entries, fetchItemEntries } = useEntryStore();
 
-  const columns: ColumnDef<EntryData>[] = [
+  const columns: ColumnDef<FridgeEntryData>[] = [
     {
       accessorKey: "type",
       header: "type",
@@ -66,22 +61,8 @@ function FridgeEntries() {
       cell: ({ row }) => (
         <div className="flex justify-end">
           <div className="flex border border-amber-500 bg-amber-500/20 rounded-md gap-0.5">
-          <Button
-            size="sm"
-            title="Edit item"
-            className="rounded-e-none rounded-s-sm hover:text-white text-amber-600/80 bg-white hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500"
-          >
-            <Pencil />
-            <span className="sr-only">Edit Item</span>
-          </Button>
-          <Button
-            size="sm"
-            title="Delete Item"
-            className="rounded-s-none rounded-e-sm hover:text-white text-amber-600/80 bg-white hover:bg-gradient-to-b hover:from-rose-400 hover:to-rose-600 active:from-rose-400 active:to-rose-500"
-          >
-            <Trash2 />
-            <span className="sr-only">Delete Item</span>
-          </Button>
+          <EditEntryDialog itemId={itemId} entry={row.original} />
+          <DeleteEntryDialog itemId={itemId} entry={row.original} />
           </div>
         </div>
       ),

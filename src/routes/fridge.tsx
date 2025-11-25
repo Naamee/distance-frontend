@@ -3,7 +3,11 @@ import { useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import { type ColumnDef } from "@tanstack/react-table";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Field, FieldGroup, FieldSet } from "@/components/ui/field";
+import {
+  Field,
+  FieldGroup,
+  FieldSet
+} from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -18,10 +22,10 @@ import { Spinner } from "@/components/ui/spinner";
 import { DataTable } from "@/components/data-table";
 import { Separator } from "@/components/ui/separator";
 import SearchFilters from "@/components/search-filters";
-import { AlertCircleIcon, List, Trash2 } from "lucide-react";
+import { useItemStore } from "@/stores/itemStore";
 import ItemDialog from "@/components/dialog-item";
 import UsageDialog from "@/components/dialog-usage";
-import ItemDeleteDialog from "@/components/dialog-delete-item";
+import DeleteItemDialog from "@/components/dialog-item-delete";
 import EditItemDialog from "@/components/dialog-item-edit";
 import { AlertCircleIcon, List } from "lucide-react";
 import { type CombinedItemData } from "@/types";
@@ -116,7 +120,7 @@ function Fridge() {
             </Button>
           </Link>
           <EditItemDialog item={row.original} />
-          <ItemDeleteDialog item={row.original} />
+          <DeleteItemDialog item={row.original} />
           </div>
         </div>
       ),
