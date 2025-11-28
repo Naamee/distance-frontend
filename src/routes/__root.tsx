@@ -39,7 +39,7 @@ const RootLayout = () => {
           duration: 40000,
           classNames: {
             success:
-              "md:text-xl md:pr-20 text-green-700 flex px-3 py-2 items-center gap-3 bg-white border border-green-700 shadow-md text-sm rounded-sm",
+              "text-lg md:text-xl h-15 md:pr-20 text-green-700 flex px-3 py-2 items-center gap-3 bg-white border border-green-700 shadow-md text-sm rounded-sm",
           },
         }}
       />
@@ -68,7 +68,7 @@ const RootLayout = () => {
       </div>
 
       {/* Nav Menu - Mobile */}
-      <div className="md:hidden justify-between flex p-5 mt-5 bg-white/75">
+      <div className="md:hidden justify-between flex p-5 bg-white/75">
         <MobileMenu />
         <AlertDialog isMobile={true} />
       </div>
