@@ -20,6 +20,7 @@ export const Route = createFileRoute("/fridge-entries/$itemId")({
 function FridgeEntries() {
   const itemId = Route.useParams().itemId;
   const [page, setPage] = useState<number>(1);
+  const perPage = useMediaQuery({ maxWidth: 425 }) ? null : 10
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const { entries, fetchItemEntries } = useEntryStore();
@@ -71,13 +72,13 @@ function FridgeEntries() {
 
   useEffect(() => {
     (async () => {
-      await fetchItemEntries(itemId, page);
+      await fetchItemEntries(itemId, page, perPage);
     })();
   }, [page]);
 
   return (
     <div
-      className={`flex gap-10 justify-center mt-10 ${isMobile ? "mx-3 mb-6" : "mx-10"}`}
+      className={`flex gap-10 justify-center mt-10 ${isMobile ? "mx-5 mb-6" : "mx-10"}`}
     >
       <div
         className={`bg-white border border-amber-500 p-10 transition-all duration-300 rounded-sm w-full h-full md:max-w-xl`}
@@ -107,11 +108,12 @@ function FridgeEntries() {
               ]
             </h1>
               <div className="flex flex-col max-h-[calc(100vh-22rem)] overflow-auto border border-amber-600/40 bg-amber-600/5 rounded-sm">
-                {entries.data.map((item, index) => (
+                {entries.data.map((entry, index) => (
                   <EntryDialog
                     key={index}
+                    itemId={itemId}
                     isLast={index == entries.data.length - 1}
-                    item={item}
+                    entry={entry}
                   />
                 ))}
               </div>

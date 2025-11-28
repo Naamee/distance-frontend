@@ -1,4 +1,5 @@
-import { act, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -50,7 +51,11 @@ export default function DaysDialog() {
     if (date) {
       const success = await updateMeet(date.toLocaleDateString("en-CA")); // format YYYY-MM-DD
       fetchMeet(); // refresh data after update
-      if (success) setDialogOpen(false);
+      if (success) {
+        setDialogOpen(false);
+        toast.success("Meeting date updated!");
+      }
+
     }
   };
 
@@ -78,18 +83,18 @@ export default function DaysDialog() {
       <DialogTrigger asChild>
         <Button
           size="lg"
-          className="mt-4 md:mt-0 w-50 md:w-100 font-bold text-2xl h-15 bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600
+          className="mt-4 md:mt-0 w-60 md:w-100 font-bold text-xl md:text-2xl h-10 md:h-15 bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600
           active:from-amber-400 active:to-amber-500 active:mt-5 active:md:mt-12"
         >
           UPDATE
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="w-100" showCloseButton={false}>
+      <DialogContent className="w-70 md:w-100" showCloseButton={false}>
         <DialogHeader>
           <DialogTitle className="text-xl">Meeting Date</DialogTitle>
           <DialogDescription className="text-base">
-            Select the date when we will be meeting next.
+            Select the next meeting date.
           </DialogDescription>
         </DialogHeader>
 

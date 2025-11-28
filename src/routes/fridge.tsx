@@ -37,6 +37,7 @@ export const Route = createFileRoute("/fridge")({
 function Fridge() {
   const [currentView, setView] = useState("all");
   const isMobile = useMediaQuery({ maxWidth: 767 });
+  const perPage = useMediaQuery({ maxWidth: 425 }) ? null : 8
   const isSmallMobile = useMediaQuery({ maxWidth: 345 });
   const { postItem, fetchCombinedItems, combinedItems, error, loading } =
     useItemStore();
@@ -139,7 +140,7 @@ function Fridge() {
 
   useEffect(() => {
     (async () => {
-      await fetchCombinedItems(page, filters);
+      await fetchCombinedItems(page, perPage, filters);
     })();
   }, [page, filters]);
 
@@ -160,7 +161,7 @@ function Fridge() {
 
   return (
     <div
-      className={`flex gap-10 justify-center mt-10 ${isMobile ? "mx-3 mb-6" : "mx-10"}`}
+      className={`flex gap-10 justify-center ${isMobile ? "mt-3 mx-5 mb-6" : "mt-10 mx-10"}`}
     >
       <div
         className={`bg-white border border-amber-500 p-10 transition-all duration-300 rounded-sm w-full ${currentView === "all" ? "h-full md:max-w-6xl" : "md:max-w-md"} `}
@@ -244,7 +245,7 @@ function Fridge() {
 
             <Button
               onClick={submitItem}
-              className="md:h-10 mt-2 md:text-base bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500 active:mt-3"
+              className="md:h-10 mt-2 md:text-base font-bold bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 active:from-amber-400 active:to-amber-500 active:mt-3"
             >
               {loading ? <Spinner /> : null}
               Submit

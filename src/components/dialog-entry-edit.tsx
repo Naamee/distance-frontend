@@ -23,8 +23,10 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useEntryStore } from "@/stores/entryStore";
 import { type FridgeEntryData } from "@/types";
+import { useMediaQuery } from "react-responsive";
 
 export default function EditEntryDialog({ itemId, entry }: { itemId: number; entry: FridgeEntryData }) {
+  const isMobile = useMediaQuery({ maxWidth: 425 }) ? null : 10
   const [open, setOpen] = useState(false);
   const [details, setDetails] = useState({
     type: entry.type,
@@ -50,10 +52,10 @@ export default function EditEntryDialog({ itemId, entry }: { itemId: number; ent
     if (!message) {
       setOpen(false);
       setLocalError(null);
-      fetchItemEntries(itemId, 1);
+      fetchItemEntries(itemId, 1, isMobile);
+      toast.success("Item updated!");
     }
     setLoading(false);
-    toast.success("Item updated successfully!");
   };
 
   // reset state on close

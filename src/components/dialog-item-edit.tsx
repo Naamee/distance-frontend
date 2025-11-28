@@ -33,6 +33,7 @@ export default function EditItemDialog({ item }: { item: CombinedItemData }) {
   });
 
   const { updateItemDetails, fetchCombinedItems } = useItemStore();
+  const isMobile = useMediaQuery({ maxWidth: 425 }) ? null : 8
   const isSmallMobile = useMediaQuery({ maxWidth: 345 });
   const categories: Record<string, string> = {
     food: "Food",
@@ -60,10 +61,10 @@ export default function EditItemDialog({ item }: { item: CombinedItemData }) {
     if (!message) {
       setOpen(false);
       setLocalError(null);
-      fetchCombinedItems(1, { item: "", category: "", status: "" });
+      fetchCombinedItems(1, isMobile, { item: "", category: "", status: "" });
     }
     setLoading(false);
-    toast.success("Item updated successfully!");
+    toast.success("Item updated!");
   };
 
   // reset state on close

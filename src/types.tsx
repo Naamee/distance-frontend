@@ -69,8 +69,9 @@ export interface FridgeEntryResponse {
 }
 
 export interface EntryDialogProps {
+  itemId: number;
   isLast: boolean;
-  item: FridgeEntryData;
+  entry: FridgeEntryData;
 }
 
 export interface ItemDialogProps {

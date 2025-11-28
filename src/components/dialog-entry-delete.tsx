@@ -15,9 +15,10 @@ import { Spinner } from "@/components/ui/spinner";
 import { useEntryStore } from "@/stores/entryStore";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { type FridgeEntryData } from "@/types";
-
+import { useMediaQuery } from "react-responsive";
 
 export default function DeleteEntryDialog( { itemId,  entry } : { itemId: number; entry: FridgeEntryData } ) {
+  const isMobile = useMediaQuery({ maxWidth: 425 }) ? null : 10
   const [dialogOpen, setDialogOpen] = useState(false);
   const { fetchItemEntries, resetError, deleteEntry, error, loading } = useEntryStore();
 
@@ -30,8 +31,8 @@ export default function DeleteEntryDialog( { itemId,  entry } : { itemId: number
     const success = await deleteEntry(entry.id);
     if (success) {
       setDialogOpen(false);
-      toast.success("Entry deleted successfully!");
-      fetchItemEntries(itemId, 1);
+      toast.success("Entry deleted!");
+      fetchItemEntries(itemId, 1, isMobile);
     }
   }
 
@@ -67,8 +68,10 @@ export default function DeleteEntryDialog( { itemId,  entry } : { itemId: number
         )}
 
         <DialogFooter>
+          <Button onClick={handleDelete} className="w-full md:text-base font-bold border hover:bg-gradient-to-b bg-rose-600/80 border-rose-600 hover:from-rose-400 hover:to-rose-600 active:from-rose-400 active:to-rose-500" variant="destructive">
           {loading ? <Spinner /> : null}
-          <Button onClick={handleDelete} className="w-full md:text-base font-bold border hover:bg-gradient-to-b bg-rose-600/80 border-rose-600 hover:from-rose-400 hover:to-rose-600 active:from-rose-400 active:to-rose-500" variant="destructive">Delete Item</Button>
+          Delete Entry
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -23,8 +23,10 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useItemStore } from "@/stores/itemStore";
 import { type CombinedItemData } from "@/types";
+import { useMediaQuery } from "react-responsive";
 
 export default function UsageDialog({ item }: { item: CombinedItemData }) {
+  const isMobile = useMediaQuery({ maxWidth: 425 }) ? null : 8
   const [open, setOpen] = useState(false);
   const [usage, setUsage] = useState({
     type: "add",
@@ -53,10 +55,10 @@ export default function UsageDialog({ item }: { item: CombinedItemData }) {
     if (!message) {
       setOpen(false);
       setLocalError(null);
-      fetchCombinedItems(1, { item: "", category: "", status: "" });
+      fetchCombinedItems(1, isMobile, { item: "", category: "", status: "" });
     }
     setLoading(false);
-    toast.success(`Item ${usage.type === "add" ? "added to" : "deducted from"} stock successfully!`);
+    toast.success(`Item ${usage.type === "add" ? "added to" : "deducted from"} stock!`);
   };
 
   // reset state on close
