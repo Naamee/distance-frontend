@@ -22,11 +22,11 @@ export const useEntryStore = create(
     },
     (set) => ({
       resetError: () => set({ error: null }),
-      fetchItemEntries: async (itemId: number, page: number) => {
+      fetchItemEntries: async (itemId: number, page: number, per_page: null | number) => {
         set({ error: null, loading: true });
         try {
           const response = await axios.get(`/fridge/${itemId}/entries`, {
-            params: { page },
+            params: { page, per_page },
           });
           set({ entries: response.data});
         } catch (error: any) {

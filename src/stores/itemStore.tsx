@@ -41,12 +41,13 @@ export const useItemStore = create(
           set({ loading: false });
         }
       },
-      fetchCombinedItems: async (page: number, filters: Filters) => {
+      fetchCombinedItems: async (page: number, per_page: null | number, filters: Filters) => {
         set({ error: null, loading: true });
         try {
           const response = await axios.get("/fridge", {
             params: {
               page,
+              per_page,
               item: filters.item,
               category: filters.category,
               status: filters.status,
