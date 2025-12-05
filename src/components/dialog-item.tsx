@@ -38,7 +38,7 @@ type OperationTypes = "usage" | "entries" | "edit" | "delete" | "menu";
 type OperationItems = "label" | "description";
 
 export default function ItemDialog({ isLast, item }: ItemDialogProps) {
-  const isMobile = useMediaQuery({ maxWidth: 425 }) ? null : 8
+  const isMobile = useMediaQuery({ maxWidth: 425 }) ? null : 8;
   const isSmallMobile = useMediaQuery({ maxWidth: 345 });
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -149,7 +149,8 @@ export default function ItemDialog({ isLast, item }: ItemDialogProps) {
         setOpen(false);
         toast.success("Item deleted!");
         fetchCombinedItems(1, isMobile, { item: "", category: "", status: "" });
-    }}
+      }
+    }
   };
 
   useEffect(() => {
@@ -183,43 +184,44 @@ export default function ItemDialog({ isLast, item }: ItemDialogProps) {
           </ItemFooter>
         </Item>
       </DialogTrigger>
-      <DialogContent showCloseButton={false} className={currentOperation === "menu" ? "w-60" : "w-80"}>
+      <DialogContent
+        showCloseButton={false}
+        className={currentOperation === "menu" ? "w-60" : "w-80"}
+      >
         <DialogHeader>
           <DialogTitle className={currentOperation === "menu" ? "sr-only" : ""}>
-            {currentOperation !== "menu"
-              ? (
-<div className="relative flex items-center">
-  <Button
-    variant="ghost"
-    size="icon-sm"
-    onClick={() => setCurrentOperation("menu")}
-    className="absolute left-0 text-amber-500 active:bg-amber-600/20 h-6 ml-3"
-  >
-    <ArrowLeft />
-    Back
-  </Button>
+            {currentOperation !== "menu" ? (
+              <div className="relative flex items-center">
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => setCurrentOperation("menu")}
+                  className="absolute left-0 text-amber-500 active:bg-amber-600/20 h-6 ml-3"
+                >
+                  <ArrowLeft />
+                  Back
+                </Button>
 
-  <span className="mx-auto text-center">
-    {operations[currentOperation].label}
-  </span>
-</div>
-
-              )
-              : "Actions"}
+                <span className="mx-auto text-center">
+                  {operations[currentOperation].label}
+                </span>
+              </div>
+            ) : (
+              "Actions"
+            )}
           </DialogTitle>
           <DialogDescription className="mt-2">
-            {
-              currentOperation === 'menu' ? 'Choose an action to perform on the item.' : operations[currentOperation].description
-            }
+            {currentOperation === "menu"
+              ? "Choose an action to perform on the item."
+              : operations[currentOperation].description}
           </DialogDescription>
         </DialogHeader>
         {currentOperation === "menu" && (
           <>
             {Object.entries(operations).map(([key, type]) =>
               key == "entries" ? (
-                <Link to="/fridge-entries/$itemId" params={{ itemId: item.id }}>
+                <Link key={key} to="/fridge-entries/$itemId" params={{ itemId: item.id }}>
                   <Button
-                    key={key}
                     className={`font-bold border w-full ${getColors(key)}`}
                   >
                     {type.label}
@@ -337,16 +339,18 @@ export default function ItemDialog({ isLast, item }: ItemDialogProps) {
           </>
         )}
 
-        {
-          currentOperation === "delete" && (
-            <>
-          <Button onClick={submit('delete')} className="w-full md:text-base font-bold border hover:bg-gradient-to-b bg-rose-600/80 border-rose-600 hover:from-rose-400 hover:to-rose-600 active:from-rose-400 active:to-rose-500" variant="destructive">
-          {loading ? <Spinner /> : null}
-          Delete Item
-          </Button>
-            </>
-          )
-        }
+        {currentOperation === "delete" && (
+          <>
+            <Button
+              onClick={submit("delete")}
+              className="w-full md:text-base font-bold border hover:bg-gradient-to-b bg-rose-600/80 border-rose-600 hover:from-rose-400 hover:to-rose-600 active:from-rose-400 active:to-rose-500"
+              variant="destructive"
+            >
+              {loading ? <Spinner /> : null}
+              Delete Item
+            </Button>
+          </>
+        )}
 
         {/* error alert */}
         {localError && (

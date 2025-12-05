@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { DataTable } from "@/components/data-table";
 import { Separator } from "@/components/ui/separator";
-import SearchFilters from "@/components/search-filters";
+import SearchFilters from "@/components/search-filters-fridge";
 import { useItemStore } from "@/stores/itemStore";
 import ItemDialog from "@/components/dialog-item";
 import UsageDialog from "@/components/dialog-usage";

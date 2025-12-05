@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { Field, FieldGroup, FieldSet } from "@/components/ui/field";
 import {
   Select,
@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ListFilterPlus, FunnelX } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { type Filters } from "@/types";
 
 export default function SearchFilters({
@@ -117,18 +118,25 @@ export default function SearchFilters({
                 </Select>
               </Field>
               {isFiltersOpen && (
-                <div className="md:col-span-1 flex items-center justify-end">
-                  <Button
-                    onClick={() =>
-                      setFilters({ item: "", category: "", status: "" })
-                    }
-                    title="Clear filters"
-                    className="h-10 w-full md:px-3 whitespace-nowrap text-8xl bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 hover:border-amber-600 active:from-amber-400 active:to-amber-500 active:border-amber-700 text-white hover:text-amber-3 00"
-                  >
-                    <FunnelX />
-                    <span className="sr-only">Clear Filters</span>
-                  </Button>
-                </div>
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                >
+                  <div className="md:col-span-1 flex items-center justify-end">
+                    <Button
+                      onClick={() =>
+                        setFilters({ item: "", category: "", status: "" })
+                      }
+                      title="Clear filters"
+                      className="h-10 w-full md:px-3 whitespace-nowrap text-8xl bg-amber-600/80 border border-amber-600 hover:bg-gradient-to-b hover:from-amber-400 hover:to-amber-600 hover:border-amber-600 active:from-amber-400 active:to-amber-500 active:border-amber-700 text-white hover:text-amber-3 00"
+                    >
+                      <FunnelX />
+                      <span className="sr-only">Clear Filters</span>
+                    </Button>
+                  </div>
+                </motion.div>
               )}
             </div>
           </FieldGroup>
@@ -176,53 +184,67 @@ export default function SearchFilters({
             </Button>
           </div>
 
-          <CollapsibleContent className="flex flex-col gap-2">
-            <Field>
-              <Select
-                value={filters.category}
-                onValueChange={(category) =>
-                  setFilters({ ...filters, category })
-                }
-              >
-                <SelectTrigger className="!h-10 md:text-base px-4 flex items-center">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent className="md:text-base">
-                  {Object.entries(categories).map(([key, label]) => (
-                    <SelectItem
-                      key={key}
-                      className="md:text-base"
-                      value={label}
+          <AnimatePresence>
+            {isOpen && (
+              <CollapsibleContent className="flex flex-col gap-2">
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                  className="overflow-hidden flex flex-col gap-2"
+                >
+                  <Field>
+                    <Select
+                      value={filters.category}
+                      onValueChange={(category) =>
+                        setFilters({ ...filters, category })
+                      }
                     >
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </Field>
+                      <SelectTrigger className="!h-10 md:text-base px-4 flex items-center">
+                        <SelectValue placeholder="Category" />
+                      </SelectTrigger>
+                      <SelectContent className="md:text-base">
+                        {Object.entries(categories).map(([key, label]) => (
+                          <SelectItem
+                            key={key}
+                            className="md:text-base"
+                            value={label}
+                          >
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </Field>
 
-            <Field>
-              <Select
-                value={filters.status}
-                onValueChange={(status) => setFilters({ ...filters, status })}
-              >
-                <SelectTrigger className="!h-10 md:text-base px-4 flex items-center">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(statuses).map(([key, label]) => (
-                    <SelectItem
-                      key={key}
-                      className="md:text-base"
-                      value={label}
+                  <Field>
+                    <Select
+                      value={filters.status}
+                      onValueChange={(status) =>
+                        setFilters({ ...filters, status })
+                      }
                     >
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </Field>
-          </CollapsibleContent>
+                      <SelectTrigger className="!h-10 md:text-base px-4 flex items-center">
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(statuses).map(([key, label]) => (
+                          <SelectItem
+                            key={key}
+                            className="md:text-base"
+                            value={label}
+                          >
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                </motion.div>
+              </CollapsibleContent>
+            )}
+          </AnimatePresence>
         </Collapsible>
       )}
     </>

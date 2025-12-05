@@ -26,6 +26,11 @@ export interface Filters {
   status: string;
 }
 
+export interface MovieFilters {
+  name: string;
+  status: string;
+}
+
 export interface Actions {
   label: string;
   class: string;
@@ -68,6 +73,23 @@ export interface FridgeEntryResponse {
   };
 }
 
+export interface MovieData {
+  id: number;
+  name: string;
+  status: string;
+  date: string;
+}
+
+export interface MovieResponse {
+  data: MovieData[];
+  pagination: {
+    page: number;
+    per_page: number;
+    total_items: number;
+    total_pages: number;
+  };
+}
+
 export interface EntryDialogProps {
   itemId: number;
   isLast: boolean;
@@ -77,6 +99,11 @@ export interface EntryDialogProps {
 export interface ItemDialogProps {
   isLast: boolean;
   item: CombinedItemData;
+}
+
+export interface MovieDialogProps {
+  isLast: boolean;
+  item: MovieData;
 }
 
 export interface ItemData {
